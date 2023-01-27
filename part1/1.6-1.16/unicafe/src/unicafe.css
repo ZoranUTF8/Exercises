@@ -1,0 +1,33 @@
+.App {
+    height: 100vh;
+    width: 100%;
+    background-color: lavender;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+  }
+  
+  .FeedbackOption-button {
+    min-width: 100px;
+    min-height: 50px;
+    background-color: lavenderblush;
+    border: none;
+    font-size: 1rem;
+    text-transform: capitalize;
+    cursor: pointer;
+  }
+  .FeedbackOption-button:hover {
+    background-color: aqua;
+  }
+  
+  .feedbackContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+  }
+  .statisticsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
