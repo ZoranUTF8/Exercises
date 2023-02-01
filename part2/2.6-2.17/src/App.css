@@ -1,8 +1,10 @@
 .App {
   text-align: center;
+  background-color: lavender;
 }
+
 .error {
-  color: red;
+  color: lightcoral;
   background: lightgrey;
   font-size: 20px;
   border-style: solid;

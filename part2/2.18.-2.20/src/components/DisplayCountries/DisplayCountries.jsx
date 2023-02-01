@@ -1,21 +1,26 @@
-import React from "react";
+import DisplayWeather from "./DisplayWeather";
 
 const DisplayCountries = ({ searchTerm, filteredCountries }) => {
-  console.log("inside dis", filteredCountries.length);
-
   if (filteredCountries.length === 1) {
+    const [lat, lng] = filteredCountries[0].latlng;
+
     return (
       <>
         {filteredCountries.map((c) => {
-          console.log(c);
           return (
-            <div>
+            <div key={c.population}>
+              <DisplayWeather lat={lat} lng={lng} />
               <h1>Capital: {c.capital}</h1>
               <h1>Area: {c.area}</h1>
               <h1>Languages</h1>
               <ul>
-                {c.languages.map((lng) => {
-                  return <h3>{lng.name}</h3>;
+                {c.languages.map((lng, indx) => {
+                  return (
+                    <h3 key={indx}>
+                      {lng.name}
+                      {c.population}
+                    </h3>
+                  );
                 })}
               </ul>
               <img src={c.flag} />
@@ -34,7 +39,7 @@ const DisplayCountries = ({ searchTerm, filteredCountries }) => {
     return (
       <div>
         {filteredCountries.map((countrie) => (
-          <h3>{countrie.name}</h3>
+          <h3 key={countrie.population}>{countrie.name}</h3>
         ))}
       </div>
     );

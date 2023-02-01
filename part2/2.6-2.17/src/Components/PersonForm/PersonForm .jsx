@@ -1,6 +1,13 @@
 import { useState } from "react";
+import PhonebookDbService from "../../Services/PhonebookDbService";
+import Notification from "../Notification/Notification";
 
-const PersonForm = ({ persons, setPersons }) => {
+const PersonForm = ({
+  persons,
+  setPersons,
+  notificationMessage,
+  setNotificationMessage,
+}) => {
   const [newName, setNewName] = useState({ name: "", number: "" });
 
   const handleChange = (e) => {
@@ -12,10 +19,22 @@ const PersonForm = ({ persons, setPersons }) => {
     e.preventDefault();
 
     if (checkForDuplicateName(persons, newName)) {
-      alert(`${newName.name} is already saved.`);
+      alert(`${newName?.name} is already saved.`);
     } else {
       const newPerson = { name: newName.name, number: newName.number };
-      setPersons(persons.concat(newPerson));
+
+      PhonebookDbService.addNewPerson(newPerson).then((newPersons) =>
+        setPersons(persons.concat(newPersons))
+      );
+
+      setNotificationMessage(
+        (prevValue) =>
+          (prevValue = `Person with name ${newPerson.name} has been added`)
+      );
+
+      setTimeout(() => {
+        setNotificationMessage(null);
+      }, 5000);
     }
 
     setNewName({ name: "", number: "" });
