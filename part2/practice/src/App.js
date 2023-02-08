@@ -34,14 +34,13 @@ const App = () => {
     };
 
     noteDbServices.createNote(noteObject).then((newNote) => {
-      setNotes(notes.concat(newNote));
+      setNotes(notes.concat(newNote.note));
       setNewNote("");
     });
   };
 
   const deleteNote = (id) => {
     noteDbServices.deleteNote(id).then((res) => {
-      console.log(res);
       setNotes(notes.filter((note) => note.id !== id));
     });
   };
@@ -50,23 +49,18 @@ const App = () => {
     setShowINotes((prevValue) => (prevValue = !prevValue));
   };
 
-  const toggleImportance = (id) => {
-    const noteToUpdate = notes.find((note) => note.id === id);
-    const updatedNote = { ...noteToUpdate, important: !noteToUpdate.important };
+  //! Add update note to backend
+  const toggleImportance = (noteToUpdate) => {
+    noteToUpdate.important = !noteToUpdate.important;
 
     noteDbServices
-      .updateNote(id, updatedNote)
+      .updateNote(noteToUpdate.id, noteToUpdate)
       .then((returnedNote) => {
-        setNotes(notes.map((note) => (note.id !== id ? note : returnedNote)));
-      })
-      .catch((error) => {
-        setErrorMessage(
-          `Note '${noteToUpdate.content}' was already removed from server`
+        setNotes(
+          notes.map((note) =>
+            note.id !== noteToUpdate.id ? note : returnedNote
+          )
         );
-        setTimeout(() => {
-          setErrorMessage(null);
-        }, 5000);
-        setNotes(notes.filter((n) => n.id !== id));
       });
   };
 
@@ -79,7 +73,7 @@ const App = () => {
           <Note
             key={note.id}
             {...note}
-            toggleImportance={toggleImportance}
+            toggleImportance={() => toggleImportance(note)}
             deleteNote={deleteNote}
           />
         ))}

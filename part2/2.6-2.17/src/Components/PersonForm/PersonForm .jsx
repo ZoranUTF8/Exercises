@@ -24,7 +24,7 @@ const PersonForm = ({
       const newPerson = { name: newName.name, number: newName.number };
 
       PhonebookDbService.addNewPerson(newPerson).then((newPersons) =>
-        setPersons(persons.concat(newPersons))
+        setPersons(persons.concat(newPersons.data))
       );
 
       setNotificationMessage(
