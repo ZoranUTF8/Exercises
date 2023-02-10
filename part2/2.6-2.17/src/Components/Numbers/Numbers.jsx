@@ -12,18 +12,19 @@ const Numbers = ({ searchTerm, persons, filteredPeople, setPersons }) => {
       });
     }
   };
+
   return (
     <div>
-      {searchTerm === ""
+      {searchTerm.length === 0
         ? persons?.map((person) => (
-            <li key={person.name}>
-              Name: {person.name} | Number: {person.number} <br />{" "}
+            <li key={person?.name}>
+              Name: {person?.name} | Number: {person?.number} <br />{" "}
               <button onClick={() => deletePerson(person)}>Delete</button>
             </li>
           ))
         : filteredPeople.map((person) => (
-            <li key={person.name}>
-              Name: {person.name} | Number: {person.number}{" "}
+            <li key={person?.name}>
+              Name: {person?.name} | Number: {person?.number}{" "}
               <button onClick={() => deletePerson(person)}>Delete</button>
             </li>
           ))}

@@ -7,8 +7,7 @@ import Numbers from "./Components/Numbers/Numbers";
 import UpdatePersonForm from "./Components/UpdatePersonForm/UpdatePersonForm";
 import Notification from "./Components/Notification/Notification";
 const App = () => {
-  const [persons, setPersons] = useState();
-
+  const [persons, setPersons] = useState([]);
   const [filteredPeople, setFilteredPeople] = useState(persons);
   const [searchTerm, setSearchTerm] = useState("");
   const [notificationMessage, setNotificationMessage] = useState("");
@@ -21,6 +20,7 @@ const App = () => {
 
   const handleFilter = (e) => {
     setSearchTerm(e.target.value);
+
     if (searchTerm) {
       setFilteredPeople(
         persons.filter((obj) =>

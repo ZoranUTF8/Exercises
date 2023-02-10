@@ -1,7 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-
 const { v4: uuidv4 } = require("uuid");
 let notes = require("./data/notes.json");
 /*
@@ -20,12 +19,14 @@ app.get("/", (request, response) => {
 });
 
 //! REST VERBS
+//? Add update note
 //* Get  single note
 
 app.get("/api/notes", (request, response) => {
   response.json(notes);
 });
 
+//* Get single note
 app.get("/api/notes/:id", (req, res) => {
   const noteId = Number(req.params.id);
 
@@ -56,7 +57,6 @@ app.delete("/api/notes/:id", (req, res) => {
 });
 
 //* Add new note
-
 app.post("/api/notes", (req, res) => {
   if (req.body.content) {
     const newNote = {
@@ -69,7 +69,6 @@ app.post("/api/notes", (req, res) => {
 
     notes = notes.concat(newNote);
 
-
     res
       .status(200)
       .send({ message: `Note added under id ${newNote.id}`, note: newNote });
@@ -78,7 +77,7 @@ app.post("/api/notes", (req, res) => {
   }
 });
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 app.listen(PORT);
 
