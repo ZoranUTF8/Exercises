@@ -36,13 +36,16 @@ const App = () => {
       <h2>Phonebook</h2>
 
       <Filter handleFilter={handleFilter} />
-      <UpdatePersonForm persons={persons} setPersons={setPersons} />
+      <UpdatePersonForm
+        persons={persons}
+        setPersons={setPersons}
+        setNotificationMessage={setNotificationMessage}
+      />
 
       <h1>Add new person</h1>
       <PersonForm
         persons={persons}
         setPersons={setPersons}
-        notificationMessage={notificationMessage}
         setNotificationMessage={setNotificationMessage}
       />
 
@@ -53,6 +56,7 @@ const App = () => {
         persons={persons}
         filteredPeople={filteredPeople}
         setPersons={setPersons}
+        setNotificationMessage={setNotificationMessage}
       />
     </div>
   );

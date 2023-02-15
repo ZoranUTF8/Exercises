@@ -14,12 +14,17 @@ mongoose
 
 const noteSchema = new mongoose.Schema(
   {
-    content: String,
+    content: {
+      type: String,
+      minLength: 5,
+      required: true,
+    },
     important: Boolean,
   },
   { timestamps: true }
 );
 
+//? Remove the _id to id from the returned documents
 noteSchema.set("toJSON", {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString();

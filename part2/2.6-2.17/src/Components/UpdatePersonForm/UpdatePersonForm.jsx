@@ -1,7 +1,7 @@
 import { useState } from "react";
 import PhonebookDbService from "../../Services/PhonebookDbService";
 
-const UpdatePersonForm = ({ persons, setPersons }) => {
+const UpdatePersonForm = ({ persons, setPersons, setNotificationMessage }) => {
   const [newPerson, setNewPerson] = useState({ name: "", number: "" });
 
   const handleChange = (e) => {
@@ -27,19 +27,31 @@ const UpdatePersonForm = ({ persons, setPersons }) => {
         number: newPerson.number,
       };
 
-      PhonebookDbService.updatePerson(foundPerson.id, updatedPerson).then(
-        (updatedData) => {
+      PhonebookDbService.updatePerson(foundPerson.id, updatedPerson)
+        .then((updatedData) => {
           setPersons(
             persons.map((person) =>
               person.id !== foundPerson.id ? person : updatedData
             )
           );
-          alert("Person updated");
-        }
-      );
+          setNotificationMessage(
+            (prevValue) =>
+              (prevValue = `Person with name ${foundPerson.name} has been updated`)
+          );
+        })
+        .catch((err) => {
+          setNotificationMessage(
+            (prevValue) => (prevValue = err.response.data.error)
+          );
+        });
     } else {
-      alert(`No person found with ${newPerson.name}`);
+      setNotificationMessage(
+        (prevValue) => (prevValue = `No person found with ${newPerson.name}`)
+      );
     }
+    setTimeout(() => {
+      setNotificationMessage(null);
+    }, 5000);
     setNewPerson({ name: "", number: "" });
   };
 
@@ -62,7 +74,7 @@ const UpdatePersonForm = ({ persons, setPersons }) => {
             onChange={handleChange}
             placeholder="new number"
             name="number"
-            type="number"
+            type="text"
           />
         </div>
         <div>

@@ -3,15 +3,22 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const Note = require("./Models/note");
+//? Middleware imports
+
+const MongooseErrorHandler = require("./Middleware/Errors/MongooseErrors");
 
 let notes = require("./data/notes.json");
-const { response } = require("express");
 /*
 The json-parser functions so that it takes the JSON data of a request, 
 transforms it into a JavaScript object and then attaches it to the body
  property of the request object before the route handler is called.*/
 app.use(express.json());
 app.use(cors());
+
+//! Unknown endpoint
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: "unknown endpoint" });
+};
 
 //! REQUEST HANDLERS
 app.get("/", (request, response) => {
@@ -31,8 +38,6 @@ app.get("/api/notes", (request, response) => {
 
 //* Get single note
 app.get("/api/notes/:id", (req, res) => {
-  // const noteId = Number(req.params.id);
-
   Note.findById(req.params.id)
     .then((note) => {
       res.status(200);
@@ -50,34 +55,53 @@ app.get("/api/notes/:id", (req, res) => {
 
 //* Delete single note
 app.delete("/api/notes/:id", (req, res) => {
-  const noteFound = notes.find((note) => note.id === Number(req.params.id));
-
-  if (noteFound) {
-    notes = notes.filter((note) => note.id !== noteFound.id);
-    res.status(200).send({ message: `Note with id ${req.params.id} deleted` });
-  } else {
-    res
-      .status(404)
-      .send({ message: `No notes with id ${req.params.id} found` });
-  }
+  Note.findByIdAndRemove(req.params.id)
+    .then((note) => {
+      if (notes) {
+        res
+          .status(200)
+          .json({ message: `Note with id ${note.id} was removed.` });
+      } else {
+        res
+          .status(404)
+          .json({ message: `No note with id ${req.params.id} was found.` });
+      }
+    })
+    .catch((error) => next(error));
 });
 
 //* Add new note
-app.post("/api/notes", (req, res) => {
-  if (req.body.content) {
-    const newNote = new Note({
-      content: req.body.content,
-      important: req.body.important || false,
-    });
+app.post("/api/notes", (req, res, next) => {
+  const newNote = new Note({
+    content: req.body.content,
+    important: req.body.important || false,
+  });
 
-    newNote.save().then((note) => {
+  newNote
+    .save()
+    .then((note) => {
       res
         .status(200)
-        .send({ message: `Note added under id ${newNote.id}`, data: note });
+        .json({ message: `Note added under id ${newNote.id}`, data: note });
+    })
+    .catch((err) => {
+      next(err);
     });
-  } else {
-    res.status(400).send({ error: "Bad request, missing content" });
-  }
+});
+
+//* Update note importance
+app.put("/api/notes/:id", (request, response, next) => {
+  const { content, important } = request.body;
+
+  Note.findByIdAndUpdate(
+    request.params.id,
+    { content, important },
+    { new: true, runValidators: true, context: "query" }
+  )
+    .then((updatedNote) => {
+      response.json(updatedNote);
+    })
+    .catch((error) => next(error));
 });
 
 const PORT = process.env.PORT || 3001;
@@ -85,3 +109,8 @@ const PORT = process.env.PORT || 3001;
 app.listen(PORT);
 
 console.log(`Server running on port ${PORT}`);
+
+//! handler of requests with unknown endpoint
+app.use(unknownEndpoint);
+//! Note that the error-handling middleware has to be the last loaded middleware!
+app.use(MongooseErrorHandler);

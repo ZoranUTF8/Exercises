@@ -3,7 +3,6 @@ const baseUrl = "http://localhost:3001/api/notes";
 
 const getAllNotes = () => {
   const request = axios.get(baseUrl);
-  console.log(request);
   return request.then((response) => response.data);
 };
 
