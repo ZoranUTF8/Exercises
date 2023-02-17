@@ -1,0 +1,23 @@
+{
+	"folders": [
+		{
+			"path": "../../../PhonebookFullstack"
+		},
+		{
+			"path": "../../../reactportfolio"
+		},
+		{
+			"path": "../../../trips"
+		},
+		{
+			"path": "../../../natours_API"
+		},
+		{
+			"path": "../../../NoviPosaoFrontend"
+		},
+		{
+			"path": "../.."
+		}
+	],
+	"settings": {}
+}
