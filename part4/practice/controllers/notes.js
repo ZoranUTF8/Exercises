@@ -2,55 +2,63 @@ const notesRouter = require("express").Router();
 const Note = require("../Models/note");
 
 //* Get  single note
-notesRouter.get("/", (request, response) => {
-  Note.find({}).then((notes) => {
-    response.json(notes);
-  });
+notesRouter.get("/", async (request, response) => {
+  const notes = await Note.find({});
+  response.json(notes);
 });
 
 //* Get single note
-notesRouter.get("/:id", (req, res) => {
-  Note.findById(req.params.id)
-    .then((note) => {
-      res.status(200);
-      res.json({
+notesRouter.get("/:id", async (req, res, next) => {
+  try {
+    const foundNote = await Note.findById(req.params.id);
+
+    if (foundNote) {
+      res.status(200).json({
         status: "success",
         message: `Note with ${req.params.id} found`,
-        data: note,
+        data: foundNote,
       });
-    })
-    .catch((error) => {
-      res.status(204);
-      res.json({ status: "fail", message: `No note with ${req.params.id}` });
-    });
+    } else {
+      response.status(404).json({
+        statusbar: "error",
+        message: `Note with ${req.params.id} has not been found`,
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
 });
 
 //* Add new note
-notesRouter.post("/", (req, res, next) => {
+notesRouter.post("/", async (req, res, next) => {
   const newNote = new Note({
     content: req.body.content,
     important: req.body.important || false,
   });
 
-  newNote
-    .save()
-    .then((note) => {
-      res
-        .status(200)
-        .json({ message: `Note added under id ${newNote.id}`, data: note });
-    })
-    .catch((err) => {
-      next(err);
+  try {
+    const savedNote = await newNote.save();
+
+    res.status(201).json({
+      message: `Note added under id ${savedNote.id}`,
+      data: savedNote,
     });
+  } catch (exception) {
+    next(exception);
+  }
 });
 
 //* Delete single note
-notesRouter.delete("/:id", (req, res) => {
-  Note.findByIdAndRemove(req.params.id)
-    .then((note) => {
-      res.status(200).json({ message: `Note with id ${note.id} was removed.` });
-    })
-    .catch((error) => next(error));
+notesRouter.delete("/:id", async (req, res, next) => {
+  try {
+    const deletedNote = await Note.findByIdAndRemove(req.params.id);
+
+    res
+      .status(204)
+      .json({ message: `Note with id ${deletedNote.id} was removed.` });
+  } catch (error) {
+    next(error);
+  }
 });
 
 //* Update note importance
