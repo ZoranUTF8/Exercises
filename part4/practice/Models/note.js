@@ -1,7 +1,5 @@
 const mongoose = require("mongoose");
-mongoose.set("strictQuery", false);
 
-const url = `mongodb+srv://admin-zoran:${process.env.ATLAS_DB_PASSWORD}@clusterfullstack2023.999pbro.mongodb.net/noteApi?retryWrites=true&w=majority`;
 
 const noteSchema = new mongoose.Schema(
   {
@@ -24,13 +22,5 @@ noteSchema.set("toJSON", {
   },
 });
 
-mongoose
-  .connect(url)
-  .then((result) => {
-    console.log("connected to MongoDB");
-  })
-  .catch((error) => {
-    console.log("error connecting to MongoDB:", error.message);
-  });
 
 module.exports = mongoose.model("Note", noteSchema);
