@@ -2,86 +2,78 @@ const blogPostsRouter = require("express").Router();
 const Blog = require("../models/blogPost");
 
 //* Get  single blog post
-blogPostsRouter.get("/", (request, response) => {
-  Blog.find({}).then((blogsPosts) => {
-    response.json(blogsPosts);
-  });
+blogPostsRouter.get("/", async (req, res) => {
+  const blogsPosts = await Blog.find({});
+  res.json(blogsPosts);
 });
 
 //* Get single note
-blogPostsRouter.get("/:id", (req, res) => {
-  Blog.findById(req.params.id)
-    .then((blogPost) => {
-      res.status(200);
-      res.json({
-        status: "success",
-        message: `blogPost with ${req.params.id} found`,
-        data: blogPost,
-      });
-    })
-    .catch((error) => {
-      res.status(204);
-      res.json({
-        status: "fail",
-        message: `No blogPost with ${req.params.id}`,
-        error: error.message,
-      });
+blogPostsRouter.get("/:id", async (req, res) => {
+  const foundBlogPost = await Blog.findById(req.params.id);
+
+  if (foundBlogPost) {
+    res.status(200);
+    res.json({
+      status: "success",
+      message: `blogPost with ${req.params.id} found`,
+      data: foundBlogPost,
     });
+  } else {
+    res.status(204);
+    res.json({
+      status: "fail",
+      message: `No blogPost with ${req.params.id}`,
+    });
+  }
 });
 
 //* Add new note
-blogPostsRouter.post("/", (req, res, next) => {
-  const newBlogPost = new Blog({
+blogPostsRouter.post("/", async (req, res) => {
+  const newBlogPost = await new Blog({
     title: req.body.title,
     author: req.body.author,
     url: req.body.url,
     likes: req.body.likes,
   });
 
-  newBlogPost
-    .save()
-    .then((blogPost) => {
-      res.status(200).json({
-        message: `Note added under id ${blogPost.id}`,
-        data: blogPost,
-      });
-    })
-    .catch((err) => {
-      next(err);
-    });
+  const savedBlogPost = await newBlogPost.save();
+
+  res.status(201).json({
+    message: `Blog post added under id ${savedBlogPost.id}`,
+    data: savedBlogPost,
+  });
 });
 
 //* Delete single note
-blogPostsRouter.delete("/:id", (req, res, next) => {
-  Blog.findByIdAndRemove(req.params.id)
-    .then((blogPost) => {
-      res
-        .status(200)
-        .json({ message: `Note with id ${blogPost.id} was removed.` });
-    })
-    .catch((error) => next(error));
+blogPostsRouter.delete("/:id", async (req, res) => {
+  const deletedBlogPost = await Blog.findByIdAndRemove(req.params.id);
+
+  res
+    .status(204)
+    .json({ message: `Blog post with id ${deletedBlogPost.id} was removed.` });
 });
 
 //* Update note importance
-blogPostsRouter.put("/:id", (request, response, next) => {
+blogPostsRouter.put("/:id", async (req, res) => {
   const { content, important, title, url } = request.body;
 
-  const newNote = {
+  const newBlogPost = {
     content,
     important,
     title,
     url,
   };
+  const updatedBlogPost = await Blog.findByIdAndUpdate(
+    req.params.id,
+    newBlogPost,
+    {
+      new: true,
+      runValidators: true,
+      context: "query",
+    }
+  );
 
-  Blog.findByIdAndUpdate(request.params.id, newNote, {
-    new: true,
-    runValidators: true,
-    context: "query",
-  })
-    .then((updatedNote) => {
-      response.json(updatedNote);
-    })
-    .catch((error) => next(error));
+  res.status(200).json(updatedBlogPost);
 });
 
 module.exports = blogPostsRouter;

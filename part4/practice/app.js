@@ -1,3 +1,11 @@
+/*Because of the library, we do not
+need the next(exception) call anymore.
+The library handles everything under the hood.
+If an exception occurs in an async route, the 
+execution is automatically passed to the error\
+ handling middleware.*/
+require("express-async-errors");
+
 const express = require("express");
 
 const cors = require("cors");

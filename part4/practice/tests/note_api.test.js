@@ -15,10 +15,31 @@ the same state before every test is run.
 
 beforeEach(async () => {
   await Note.deleteMany({});
-  let noteObject = new Note(helper.initialNotes[0]);
-  await noteObject.save();
-  noteObject = new Note(helper.initialNotes[1]);
-  await noteObject.save();
+
+  const noteObjects = helper.initialNotes.map((note) => new Note(note));
+
+  /*
+  creates a new array that consists of promises,
+  that are created by calling the save method of
+  each item in the noteObjects array
+  In other words, it is an array of promises 
+  for saving each of the items to the database.
+  */
+  const promiseArray = noteObjects.map((note) => note.save());
+
+  /*
+  The Promise.all method can be used for 
+  transforming an array of promises into 
+  a single promise, that will be fulfilled 
+  once every promise in the array passed to 
+  it as a parameter is resolved. The last 
+  line of code await Promise.all(promiseArray) 
+  waits until every promise for saving a note is 
+  finished, meaning that the database has been 
+  initialized.
+  */
+
+  await Promise.all(promiseArray);
 });
 
 //? Tests
