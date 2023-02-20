@@ -183,6 +183,7 @@ describe("update a blog post", () => {
     expect(response.status).toBe(200);
 
     expect(response._body.likes).toBe("20");
+    
   }, 10000);
 });
 
