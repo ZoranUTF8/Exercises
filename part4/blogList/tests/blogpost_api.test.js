@@ -4,6 +4,7 @@ const app = require("../app");
 const Blog = require("../models/blogPost");
 const api = supertest(app);
 const helper = require("./test_helper");
+const logger = require("../utils/logger");
 
 /*
 The database is cleared out at the beginning,
@@ -46,92 +47,144 @@ beforeEach(async () => {
 
 //? Tests
 
-test("the first note is about HTTP methods", async () => {
-  const response = await api.get("/api/notes");
+describe("when there are blog posts added", () => {
+  test("a specific blog post is within the returned notes", async () => {
+    const response = await api.get("/api/blogs");
+    const titles = response.body.map((r) => r.title);
+    expect(titles).toContain("First class tests");
+  });
 
-  expect(response.body[0].content).toBe("HTML is easy");
+  test("blog posts are returned as json", async () => {
+    await api
+      .get("/api/blogs")
+      .expect(200)
+      .expect("Content-Type", /application\/json/);
+  }, 100000);
+  test("a specific blog post can be viewed", async () => {
+    const blogStartState = await helper.blogPostsInDb();
+
+    const blogToView = blogStartState[0];
+
+    const blogPost = await api
+      .get(`/api/blogs/${blogToView.id}`)
+      .expect(200)
+      .expect("Content-Type", /application\/json/);
+
+    expect(blogPost.body.data.id).toEqual(blogToView.id);
+  });
+
+  test("identifier property of the blog posts is named id", async () => {
+    const blogPostFromDb = await helper.blogPostsInDb();
+
+    const blogPostToView = blogPostFromDb[0];
+
+    expect(blogPostToView.id).toBeDefined();
+  });
+
+  test("if likes property is missing from the request, it will default to the value 0", async () => {
+    const newBlogPost = {
+      title: "New blog post",
+      author: "Some author",
+      url: "http://example.com",
+    };
+
+    await api
+      .post("/api/blogs")
+      .send(newBlogPost)
+      .expect(201)
+      .expect("Content-Type", /application\/json/);
+
+    const allBlogs = await helper.blogPostsInDb();
+
+    const lastAddedPost = allBlogs.pop();
+
+    expect(lastAddedPost.likes).toBe("0");
+  });
+  test("verify that if the title or url properties are missing from the request data, the backend responds to the request with the status code 400 Bad Request", async () => {
+    const newBlogPost = {
+      author: "Some author",
+    };
+    await api
+      .post("/api/blogs")
+      .send(newBlogPost)
+      .expect(400)
+      .expect("Content-Type", /application\/json/);
+  }, 10000);
 });
 
-test("a specific note is within the returned notes", async () => {
-  const response = await api.get("/api/notes");
+describe("addition of a new blog post", () => {
+  test("a valid blog post can be added", async () => {
+    const newBlogPost = {
+      title: "New blog post",
+      author: "Some author",
+      url: "http://example.com",
+      likes: 20,
+    };
 
-  const contents = response.body.map((r) => r.content);
-  expect(contents).toContain("Browser can execute only JavaScript");
+    await api
+      .post("/api/blogs")
+      .send(newBlogPost)
+      .expect(201)
+      .expect("Content-Type", /application\/json/);
+
+    const allBlogs = await helper.blogPostsInDb();
+
+    expect(allBlogs).toHaveLength(helper.initialBlogPost.length + 1);
+
+    const blogContents = allBlogs.map((n) => n.title);
+
+    expect(blogContents).toContain("New blog post");
+  }, 10000);
+
+  test("note without content is not added", async () => {
+    const newBlogPost = {
+      title: "test title",
+    };
+
+    await api.post("/api/blogs").send(newBlogPost).expect(400);
+
+    const allBlogs = await helper.blogPostsInDb();
+
+    expect(allBlogs).toHaveLength(helper.initialBlogPost.length);
+  });
 });
 
-test("there are two notes", async () => {
-  const response = await api.get("/api/notes");
+describe("deletion of a blog post", () => {
+  test("a blog post can be deleted", async () => {
+    const blogPostsStartState = await helper.blogPostsInDb();
+    const blogPostToDelete = blogPostsStartState[0];
 
-  expect(response.body).toHaveLength(helper.initialNotes.length);
+    await api.delete(`/api/blogs/${blogPostToDelete.id}`).expect(204);
+
+    const blogPostsAfterDelete = await helper.blogPostsInDb();
+
+    expect(blogPostsAfterDelete).toHaveLength(
+      helper.initialBlogPost.length - 1
+    );
+
+    const contents = blogPostsAfterDelete.map((r) => r.title);
+
+    expect(contents).not.toContain(blogPostToDelete.title);
+  }, 10000);
 });
 
-test.only("notes are returned as json", async () => {
-  await api
-    .get("/api/blogs")
-    .expect(200)
-    .expect("Content-Type", /application\/json/);
-}, 100000);
+describe("update a blog post", () => {
+  test.only("a valid blog post can be updated", async () => {
+    const blogPostsStartState = await helper.blogPostsInDb();
 
-test("a valid note can be added", async () => {
-  const newNote = {
-    content: "async/await simplifies making async calls",
-    important: true,
-  };
+    let blogPostToUpdate = blogPostsStartState[0];
 
-  await api
-    .post("/api/notes")
-    .send(newNote)
-    .expect(201)
-    .expect("Content-Type", /application\/json/);
+    blogPostToUpdate = { ...blogPostToUpdate, likes: "20" };
 
-  const notesAtEnd = await helper.notesInDb();
+    const response = await api
+      .put(`/api/blogs/${blogPostToUpdate.id}`)
+      .send(blogPostToUpdate);
 
-  expect(notesAtEnd).toHaveLength(helper.initialNotes.length + 1);
+    expect(response.status).toBe(200);
 
-  const contents = notesAtEnd.map((n) => n.content);
-
-  expect(contents).toContain("async/await simplifies making async calls");
-}, 10000);
-
-test("note without content is not added", async () => {
-  const newNote = {
-    important: true,
-  };
-
-  await api.post("/api/notes").send(newNote).expect(400);
-
-  const notesAtEnd = await helper.notesInDb();
-
-  expect(notesAtEnd).toHaveLength(helper.initialNotes.length);
+    expect(response._body.likes).toBe("20");
+  }, 10000);
 });
-
-test("a specific note can be viewed", async () => {
-  const notesAtStart = await helper.notesInDb();
-
-  const noteToView = notesAtStart[0];
-
-  const resultNote = await api
-    .get(`/api/notes/${noteToView.id}`)
-    .expect(200)
-    .expect("Content-Type", /application\/json/);
-
-  expect(resultNote.body.data.id).toEqual(noteToView.id);
-});
-
-test("a note can be deleted", async () => {
-  const notesAtStart = await helper.notesInDb();
-  const noteToDelete = notesAtStart[0];
-
-  const res = await api.delete(`/api/notes/${noteToDelete.id}`).expect(204);
-
-  const notesAtEnd = await helper.notesInDb();
-
-  expect(notesAtEnd).toHaveLength(helper.initialNotes.length - 1);
-
-  const contents = notesAtEnd.map((r) => r.content);
-
-  expect(contents).not.toContain(noteToDelete.content);
-}, 10000);
 
 afterAll(async () => {
   await mongoose.connection.close();

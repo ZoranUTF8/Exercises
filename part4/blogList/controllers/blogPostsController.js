@@ -1,13 +1,13 @@
 const blogPostsRouter = require("express").Router();
 const Blog = require("../models/blogPost");
 
-//* Get  single blog post
+//* Get all blog post
 blogPostsRouter.get("/", async (req, res) => {
   const blogsPosts = await Blog.find({});
   res.json(blogsPosts);
 });
 
-//* Get single note
+//* Get single blog post
 blogPostsRouter.get("/:id", async (req, res) => {
   const foundBlogPost = await Blog.findById(req.params.id);
 
@@ -27,7 +27,7 @@ blogPostsRouter.get("/:id", async (req, res) => {
   }
 });
 
-//* Add new note
+//* Add new blog post
 blogPostsRouter.post("/", async (req, res) => {
   const newBlogPost = await new Blog({
     title: req.body.title,
@@ -44,7 +44,7 @@ blogPostsRouter.post("/", async (req, res) => {
   });
 });
 
-//* Delete single note
+//* Delete single blog post
 blogPostsRouter.delete("/:id", async (req, res) => {
   const deletedBlogPost = await Blog.findByIdAndRemove(req.params.id);
 
@@ -53,16 +53,18 @@ blogPostsRouter.delete("/:id", async (req, res) => {
     .json({ message: `Blog post with id ${deletedBlogPost.id} was removed.` });
 });
 
-//* Update note importance
+//* Update blog post
 blogPostsRouter.put("/:id", async (req, res) => {
-  const { content, important, title, url } = request.body;
+  const { author, likes, title, url } = req.body;
 
   const newBlogPost = {
-    content,
-    important,
     title,
+    likes,
+    author,
     url,
   };
+
+
   const updatedBlogPost = await Blog.findByIdAndUpdate(
     req.params.id,
     newBlogPost,

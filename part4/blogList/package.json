@@ -11,6 +11,7 @@
   "author": "Zoran Janjic",
   "license": "ISC",
   "devDependencies": {
+    "colors": "^1.4.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.34.0",
     "eslint-config-airbnb-base": "^15.0.0",

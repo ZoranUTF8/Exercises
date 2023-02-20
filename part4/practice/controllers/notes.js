@@ -18,7 +18,7 @@ notesRouter.get("/:id", async (req, res) => {
       data: foundNote,
     });
   } else {
-    response.status(404).json({
+    res.status(404).json({
       status: "error",
       message: `Note with ${req.params.id} has not been found`,
     });
