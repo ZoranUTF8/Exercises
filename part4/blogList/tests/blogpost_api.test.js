@@ -16,33 +16,7 @@ the same state before every test is run.
 
 beforeEach(async () => {
   await Blog.deleteMany({});
-
-  const blogObjects = helper.initialBlogPost.map(
-    (blogPost) => new Blog(blogPost)
-  );
-
-  /*
-  creates a new array that consists of promises,
-  that are created by calling the save method of
-  each item in the noteObjects array
-  In other words, it is an array of promises 
-  for saving each of the items to the database.
-  */
-  const promiseArray = blogObjects.map((blogPost) => blogPost.save());
-
-  /*
-  The Promise.all method can be used for 
-  transforming an array of promises into 
-  a single promise, that will be fulfilled 
-  once every promise in the array passed to 
-  it as a parameter is resolved. The last 
-  line of code await Promise.all(promiseArray) 
-  waits until every promise for saving a note is 
-  finished, meaning that the database has been 
-  initialized.
-  */
-
-  await Promise.all(promiseArray);
+  await Blog.insertMany(helper.initialBlogPost);
 });
 
 //? Tests
@@ -183,7 +157,6 @@ describe("update a blog post", () => {
     expect(response.status).toBe(200);
 
     expect(response._body.likes).toBe("20");
-    
   }, 10000);
 });
 
