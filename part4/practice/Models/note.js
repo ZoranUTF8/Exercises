@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-
 const noteSchema = new mongoose.Schema(
   {
     content: {
@@ -9,6 +8,10 @@ const noteSchema = new mongoose.Schema(
       required: true,
     },
     important: Boolean,
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
   { timestamps: true }
 );
@@ -21,6 +24,5 @@ noteSchema.set("toJSON", {
     delete returnedObject.__v;
   },
 });
-
 
 module.exports = mongoose.model("Note", noteSchema);

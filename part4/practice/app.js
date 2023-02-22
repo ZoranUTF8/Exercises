@@ -18,6 +18,8 @@ const logger = require("./utils/logger");
 
 const notesRouter = require("./controllers/notes");
 
+const usersRouter = require("./controllers/users");
+
 const middleware = require("./utils/middleware");
 
 const mongoose = require("mongoose");
@@ -38,9 +40,12 @@ transforms it into a JavaScript object and then attaches it to the body
  property of the request object before the route handler is called. */
 app.use(cors());
 app.use(express.json());
-// ! If needed later
+
+// ! If needed later for frontend
 //! app.use(express.static("build"));
+
 app.use("/api/notes", notesRouter);
+app.use("/api/users", usersRouter);
 
 //! handler of requests with unknown endpoint
 app.use(middleware.unknownEndpoint);
