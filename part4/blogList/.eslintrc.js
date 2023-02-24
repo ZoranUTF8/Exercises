@@ -15,7 +15,7 @@ module.exports = {
     "linebreak-style": ["error", "unix"],
     quotes: ["error", "double"],
     jest: {
-      severity: 2,
+      severity: 1,
     },
   },
 };

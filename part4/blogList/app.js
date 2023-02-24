@@ -18,6 +18,8 @@ const logger = require("./utils/logger");
 
 const blogRouter = require("./controllers/blogPostsController");
 
+const usersRouter = require("./routers/users");
+
 const middleware = require("./utils/middleware");
 
 const mongoose = require("mongoose");
@@ -41,8 +43,9 @@ app.use(express.json());
 // ! If needed later
 //! app.use(express.static("build"));
 app.use("/api/blogs", blogRouter);
+app.use("/api/users", usersRouter);
 
 app.use(middleware.unknownEndpoint);
-app.use(middleware.errorHandler);
+app.use(middleware.errorHandlerMiddleware);
 
 module.exports = app;

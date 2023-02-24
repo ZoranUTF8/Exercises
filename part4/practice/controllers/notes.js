@@ -1,15 +1,17 @@
 const notesRouter = require("express").Router();
 const Note = require("../Models/note");
+const jwt = require("jsonwebtoken");
+const authMiddleware = require("../utils/authMiddleware");
 const User = require("../Models/user");
 
 //* Get  all notes
-notesRouter.get("/", async (request, response) => {
+notesRouter.get("/", authMiddleware, async (req, res) => {
   const notes = await Note.find({}).populate("user", { username: 1, name: 1 });
-  response.json(notes);
+  res.json(notes);
 });
 
 //* Get single note
-notesRouter.get("/:id", async (req, res) => {
+notesRouter.get("/:id", authMiddleware, async (req, res) => {
   const foundNote = await Note.findById(req.params.id);
 
   if (foundNote) {
@@ -27,8 +29,8 @@ notesRouter.get("/:id", async (req, res) => {
 });
 
 //* Add new note
-notesRouter.post("/", async (req, res) => {
-  const user = await User.findById(req.body.userId);
+notesRouter.post("/", authMiddleware, async (req, res) => {
+  const user = await User.findById(req.user.id);
 
   const newNote = new Note({
     content: req.body.content,
@@ -49,7 +51,7 @@ notesRouter.post("/", async (req, res) => {
 });
 
 //* Delete single note
-notesRouter.delete("/:id", async (req, res) => {
+notesRouter.delete("/:id", authMiddleware, async (req, res) => {
   const deletedNote = await Note.findByIdAndRemove(req.params.id);
 
   res

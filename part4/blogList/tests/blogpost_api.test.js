@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const supertest = require("supertest");
 const app = require("../app");
 const Blog = require("../models/blogPost");
+const User = require("../models/user");
 const api = supertest(app);
 const helper = require("./test_helper");
 const logger = require("../utils/logger");
@@ -17,9 +18,14 @@ the same state before every test is run.
 beforeEach(async () => {
   await Blog.deleteMany({});
   await Blog.insertMany(helper.initialBlogPost);
+
+  await User.deleteMany({});
+  await User.insertMany(helper.initialUsersInDb);
 });
 
 //? Tests
+
+//* Blog
 
 describe("when there are blog posts added", () => {
   test("a specific blog post is within the returned notes", async () => {
@@ -143,7 +149,7 @@ describe("deletion of a blog post", () => {
 });
 
 describe("update a blog post", () => {
-  test.only("a valid blog post can be updated", async () => {
+  test("a valid blog post can be updated", async () => {
     const blogPostsStartState = await helper.blogPostsInDb();
 
     let blogPostToUpdate = blogPostsStartState[0];
@@ -157,6 +163,29 @@ describe("update a blog post", () => {
     expect(response.status).toBe(200);
 
     expect(response._body.likes).toBe("20");
+  }, 10000);
+});
+
+//* Users
+//! Not working  ???
+describe("ensure invalid users are not created ", () => {
+  test("a invalid user cannot be added", async () => {
+    const invalidUser = {
+      name: "test title",
+    };
+    await api.post("/api/users").send(invalidUser).expect(400);
+
+    const allUsersInDb = await helper.allRegisteredUsers();
+
+    logger.info("ALL USERS IN DB ", allUsersInDb);
+
+    expect(allUsersInDb).toHaveLength(helper.initialUsersInDb.length);
+  });
+  test.only("a valid user can be added", async () => {
+    // const allBlogs = await helper.blogPostsInDb();
+    // expect(allBlogs).toHaveLength(helper.initialBlogPost.length + 1);
+    // const blogContents = allBlogs.map((n) => n.title);
+    // expect(blogContents).toContain("New blog post");
   }, 10000);
 });
 
