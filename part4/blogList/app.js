@@ -16,9 +16,11 @@ const config = require("./utils/config");
 
 const logger = require("./utils/logger");
 
-const blogRouter = require("./controllers/blogPostsController");
+const blogRouter = require("./routers/blog");
 
 const usersRouter = require("./routers/users");
+
+const authRouter = require("./routers/auth");
 
 const middleware = require("./utils/middleware");
 
@@ -44,6 +46,7 @@ app.use(express.json());
 //! app.use(express.static("build"));
 app.use("/api/blogs", blogRouter);
 app.use("/api/users", usersRouter);
+app.use("/api/auth", authRouter);
 
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandlerMiddleware);

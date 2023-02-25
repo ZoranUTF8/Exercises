@@ -16,15 +16,15 @@ const NO_TOKEN = "UnauthenticatedError";
 const MONGOOSE_CAST_ERROR = "CastError";
 const MONGOOSE_VALIDATION_ERROR = "ValidationError";
 const MONGOOSE_DUPLICATE_KEY_ERROR_CODE = 11000;
-const BADREQUESTERROR = "BadRequestError";
 
 const errorHandlerMiddleware = (err, req, res, next) => {
-
   let customError = {
     statusCode: err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
     status: err.status || "Failed",
     msg: err.message || "Something went wrong.",
   };
+  
+  logger.error(err);
 
   //  Cast error
   if (err.name === MONGOOSE_CAST_ERROR) {
@@ -41,7 +41,11 @@ const errorHandlerMiddleware = (err, req, res, next) => {
     customError = handleDuplicateKetError(customError, err);
   }
   // JWT invalid token
-  else if (err.name === JWT_ERROR || EXPIRED_JWT || NO_TOKEN) {
+  else if (
+    err.name === JWT_ERROR ||
+    err.name === EXPIRED_JWT ||
+    err.name === NO_TOKEN
+  ) {
     customError = handleJsonWebTokenError(customError, err);
   }
 
