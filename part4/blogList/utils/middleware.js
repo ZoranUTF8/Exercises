@@ -23,8 +23,8 @@ const errorHandlerMiddleware = (err, req, res, next) => {
     status: err.status || "Failed",
     msg: err.message || "Something went wrong.",
   };
-  
-  logger.error(err);
+
+  logger.error(err.name);
 
   //  Cast error
   if (err.name === MONGOOSE_CAST_ERROR) {

@@ -1,6 +1,7 @@
 const Blog = require("../models/blog");
 const User = require("../models/user");
-const CustomAPIError = require("../utils/customErrors/CustomApiError");
+const { CustomAPIError } = require("../utils/customErrors/index");
+const { StatusCodes } = require("http-status-codes");
 
 //* Get all blog post
 
@@ -63,16 +64,29 @@ const addNewBlogPost = async (req, res, next) => {
 
 // //* Delete single blog post
 const deleteSingleBlogPost = async (req, res, next) => {
-  const deletedBlogPost = await Blog.findByIdAndRemove(req.params.id);
+  const blogPostToDelete = await Blog.findById(req.params.id);
 
-  if (deletedBlogPost) {
-    res.status(200).json({
-      message: `Blog post deleted under id ${deletedBlogPost.id}`,
-      data: deletedBlogPost,
-    });
+  if (blogPostToDelete) {
+    if (blogPostToDelete.user.toString() === req.user.id) {
+      const deletedBlogPost = await Blog.findByIdAndDelete(blogPostToDelete.id);
+      res.status(200).json({
+        message: `Blog post deleted under id ${deletedBlogPost.id}`,
+        data: deletedBlogPost,
+      });
+    } else {
+      return next(
+        new CustomAPIError(
+          `You are not allowed to delete a blog post which does not belong to you.`,
+          StatusCodes.UNAUTHORIZED
+        )
+      );
+    }
   } else {
     return next(
-      new CustomAPIError(`No blog post found with ${req.params.id}`, 400)
+      new CustomAPIError(
+        `No blog post found with ${req.params.id}`,
+        StatusCodes.NOT_FOUND
+      )
     );
   }
 };
