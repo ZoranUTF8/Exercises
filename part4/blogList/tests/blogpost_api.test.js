@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const supertest = require("supertest");
 const app = require("../app");
-const Blog = require("../models/blogPost");
+const Blog = require("../models/blog");
 const User = require("../models/user");
 const api = supertest(app);
 const helper = require("./test_helper");
@@ -14,14 +14,20 @@ in the initialNotes array to the database. By
 doing this, we ensure that the database is in
 the same state before every test is run.
 */
-
+let authToken = "";
 beforeEach(async () => {
   await Blog.deleteMany({});
   await Blog.insertMany(helper.initialBlogPost);
 
   await User.deleteMany({});
   await User.insertMany(helper.initialUsersInDb);
-});
+
+  const response = await api
+    .post("/api/auth/login")
+    .send({ username: "Zochan", password: "Moeko2023!" });
+
+  authToken = response.body.token;
+}, 10000);
 
 //? Tests
 
@@ -70,6 +76,7 @@ describe("when there are blog posts added", () => {
 
     await api
       .post("/api/blogs")
+      .set("Authorization", `Bearer ${authToken}`)
       .send(newBlogPost)
       .expect(201)
       .expect("Content-Type", /application\/json/);
@@ -86,6 +93,7 @@ describe("when there are blog posts added", () => {
     };
     await api
       .post("/api/blogs")
+      .set("Authorization", `Bearer ${authToken}`)
       .send(newBlogPost)
       .expect(400)
       .expect("Content-Type", /application\/json/);
@@ -99,10 +107,12 @@ describe("addition of a new blog post", () => {
       author: "Some author",
       url: "http://example.com",
       likes: 20,
+      user: "63f8391ff6a57f6caf13430a",
     };
 
     await api
       .post("/api/blogs")
+      .set("Authorization", `Bearer ${authToken}`)
       .send(newBlogPost)
       .expect(201)
       .expect("Content-Type", /application\/json/);
@@ -116,25 +126,59 @@ describe("addition of a new blog post", () => {
     expect(blogContents).toContain("New blog post");
   }, 10000);
 
-  test("note without content is not added", async () => {
+  test("Blog post without content is not added", async () => {
     const newBlogPost = {
       title: "test title",
     };
 
-    await api.post("/api/blogs").send(newBlogPost).expect(400);
+    await api
+      .post("/api/blogs")
+      .send(newBlogPost)
+      .set("Authorization", `Bearer ${authToken}`)
+      .expect(400);
 
     const allBlogs = await helper.blogPostsInDb();
 
     expect(allBlogs).toHaveLength(helper.initialBlogPost.length);
   });
+
+  test("Blog post without token cannot be created", async () => {
+    const newBlogPost = {
+      title: "New blog post 2",
+      author: "Some author",
+      url: "http://example.com",
+      likes: 20,
+      user: "63f8391ff6a57f6caf13430a",
+    };
+
+    await api
+      .post("/api/blogs")
+      .send(newBlogPost)
+      .expect(401)
+      .expect("Content-Type", /application\/json/);
+
+    const allBlogs = await helper.blogPostsInDb();
+
+    expect(allBlogs).toHaveLength(helper.initialBlogPost.length);
+
+    const blogContents = allBlogs.map((n) => n.title);
+
+    expect(blogContents).not.toContain("New blog post 2");
+  });
 });
 
 describe("deletion of a blog post", () => {
   test("a blog post can be deleted", async () => {
+    const users = await helper.allRegisteredUsers();
+
     const blogPostsStartState = await helper.blogPostsInDb();
     const blogPostToDelete = blogPostsStartState[0];
 
-    await api.delete(`/api/blogs/${blogPostToDelete.id}`).expect(204);
+    await api
+      .delete(`/api/blogs/${blogPostToDelete.id}`)
+      .set("Authorization", `Bearer ${authToken}`)
+      .set("User", users[0])
+      .expect(200);
 
     const blogPostsAfterDelete = await helper.blogPostsInDb();
 
@@ -158,16 +202,17 @@ describe("update a blog post", () => {
 
     const response = await api
       .put(`/api/blogs/${blogPostToUpdate.id}`)
+      .set("Authorization", `Bearer ${authToken}`)
       .send(blogPostToUpdate);
 
     expect(response.status).toBe(200);
 
-    expect(response._body.likes).toBe("20");
+    expect(response.body.data.likes).toBe("20");
   }, 10000);
 });
 
 //* Users
-//! Not working  ???
+//! FIX LATER Not working     ValidationError: User validation failed: username: Path `username` is required.  ???
 describe("ensure invalid users are not created ", () => {
   test("a invalid user cannot be added", async () => {
     const invalidUser = {
@@ -181,7 +226,8 @@ describe("ensure invalid users are not created ", () => {
 
     expect(allUsersInDb).toHaveLength(helper.initialUsersInDb.length);
   });
-  test.only("a valid user can be added", async () => {
+
+  test("a valid user can be added", async () => {
     // const allBlogs = await helper.blogPostsInDb();
     // expect(allBlogs).toHaveLength(helper.initialBlogPost.length + 1);
     // const blogContents = allBlogs.map((n) => n.title);

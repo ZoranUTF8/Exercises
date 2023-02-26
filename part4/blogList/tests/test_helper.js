@@ -1,4 +1,4 @@
-const Blog = require("../models/blogPost");
+const Blog = require("../models/blog");
 const User = require("../models/user");
 
 const initialBlogPost = [
@@ -8,6 +8,7 @@ const initialBlogPost = [
     author: "Robert C. Martin",
     url: "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll",
     likes: 10,
+    user: "63f8391ff6a57f6caf13430a",
     __v: 0,
   },
   {
@@ -16,6 +17,7 @@ const initialBlogPost = [
     author: "Robert C. Martin",
     url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
     likes: 0,
+    user: "63f8391ff6a57f6caf13430a",
     __v: 0,
   },
 ];
@@ -23,8 +25,10 @@ const initialBlogPost = [
 const initialUsersInDb = [
   {
     _id: "63f8391ff6a57f6caf13430a",
-    name: "TEST NAME",
-    password: "412321412j41i2j4io12j4oi",
+    name: "Zoran Janjic",
+    username: "Zochan",
+    passwordHash:
+      "$2b$10$75GtTbfpgs2Za94CfkxIse5imfeSxCaC9mbpJ33hn5VjeArMGTaBS",
     __v: 0,
   },
 ];
