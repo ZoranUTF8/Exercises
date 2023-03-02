@@ -43,7 +43,6 @@ notesRouter.post("/", authMiddleware, async (req, res) => {
   //? Add the note id to the users notes array
   user.notes = user.notes.concat(savedNote._id);
   await user.save();
-
   res.status(201).json({
     message: `Note added under id ${savedNote.id} from user: ${user.name}`,
     data: savedNote,

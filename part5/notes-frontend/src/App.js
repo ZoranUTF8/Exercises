@@ -5,6 +5,8 @@ import AddNoteForm from "./components/AddNoteForm";
 import noteDbServices from "./Services/NotesDbServices";
 import DisplayNotes from "./components/DisplayNotes";
 import Error from "./components/Error";
+import localStorageOperations from "./utils/localStorageOperations";
+import { setToken } from "./Services/NotesDbServices";
 
 const App = () => {
   const [notes, setNotes] = useState([]);
@@ -13,6 +15,7 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [user, setUser] = useState(null);
 
+  //* Fetch data from db
   useEffect(() => {
     noteDbServices
       .getAllNotes()
@@ -22,6 +25,22 @@ const App = () => {
       .catch((err) => {
         setErrorMessage(err.message);
       });
+  }, []);
+
+  //* Check if user logged in
+  useEffect(() => {
+    const loggedInUserJSON =
+      localStorageOperations.get_user_from_local_storage();
+
+    console.log("JSON USER FROM LS: ", loggedInUserJSON);
+    console.log("APP STATE USER: ", user);
+    if (loggedInUserJSON) {
+      console.log("Logged in user: " + loggedInUserJSON);
+      setUser(loggedInUserJSON);
+      setToken(loggedInUserJSON.token);
+    } else {
+      console.log("No logged in user");
+    }
   }, []);
 
   const filteredNotes = showINotes
@@ -49,6 +68,7 @@ const App = () => {
           newNote={newNote}
           setNewNote={setNewNote}
           setNotes={setNotes}
+          notes={notes}
         />
       )}
       <h1>Notes</h1>

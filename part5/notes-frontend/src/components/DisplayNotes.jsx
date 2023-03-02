@@ -23,6 +23,13 @@ const DisplayNotes = ({ notes, setNotes, filteredNotes }) => {
       });
   };
 
+  if (filteredNotes.length < 1) {
+    return (
+      <div>
+        <h1>No notes added.</h1>
+      </div>
+    );
+  }
   return (
     <div>
       <ul>
