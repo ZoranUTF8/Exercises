@@ -1,0 +1,84 @@
+:root {
+  --main-color: #6ca7ff; /* Define a variable named --main-color with a value of #007bff (blue) */
+  --main-background: #002233;
+  --main-background-lighter: #013d5b;
+  --plain-white: #fff;
+}
+
+body {
+  background-image: url("./assets/images/background.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  min-height: 100vh;
+}
+.full-height-section {
+}
+
+.app-section {
+  color: var(--main-color);
+  min-height: 100vh;
+}
+
+.custom-navbar-color {
+  background-color: var(--main-background);
+}
+.navbar-nav,
+.nav-link,
+.navbar-brand {
+  color: var(--main-color);
+}
+
+.navbar-nav .nav-link.active,
+.navbar-nav .show > .nav-link {
+  color: var(--plain-white) !important; /* Set the text color to red */
+}
+.dropdown-menu.show {
+  background-color: var(--main-background) !important;
+  border: 1px var(--main-color) solid;
+}
+a.dropdown-item {
+  color: var(--main-color);
+}
+
+.navbar-nav:hover,
+.nav-link:hover,
+.navbar-brand:hover {
+  color: var(--main-color);
+}
+.dropdown-divider {
+  background-color: var(--main-color);
+}
+
+.custom-toggler {
+  color: var(--main-background); /* Set the color to red */
+  background-color: var(--main-color);
+}
+
+.show {
+  color: var(--main-color);
+}
+.nav-link:active {
+  color: var(--main-color);
+}
+
+.nav-link:active {
+  color: var(--main-color);
+}
+span.navbar-text {
+  color: var(--main-color);
+}
+
+/* ERROR MESSAGE */
+.error-message {
+  color: var(--main-color);
+  background-color: var(--main-background);
+  border: 1px var(--main-color) solid;
+
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+}
