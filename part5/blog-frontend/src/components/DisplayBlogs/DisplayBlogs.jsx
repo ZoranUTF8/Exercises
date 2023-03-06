@@ -3,10 +3,11 @@ import Blog from "../Blog/Blog";
 
 const DisplayBlogs = ({ blogs }) => {
   return (
-    <div>
-      <h2>All blogs</h2>
-      {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+    <div className="all-blogs-display p-5 text-center mx-auto text-white w-50">
+      <h2 className="text-center mt-3">All blog posts</h2>
+      <hr />
+      {blogs.map((blog, indx) => (
+        <Blog key={blog.id} blog={blog} indx={indx} />
       ))}
     </div>
   );

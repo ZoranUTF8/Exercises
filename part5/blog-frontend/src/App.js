@@ -1,12 +1,14 @@
 import "./App.css";
 import { useState, useEffect } from "react";
+import localStorageOperations from "./utils/localStorageOperations";
 //* App imports
 import {
   DisplayBlogs,
   NavbarComponent,
   LoginForm,
-  Error,
+  AddBlog,
 } from "./components/Index";
+import { setToken } from "./services/BlogService";
 
 import BlogService from "./services/BlogService";
 //* Bootstrap
@@ -17,36 +19,50 @@ import Col from "react-bootstrap/Col";
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
-  const [errorMessage, setErrorMessage] = useState("");
+
+  //* Check if user logged in
+  useEffect(() => {
+    const loggedInUserJSON =
+      localStorageOperations.get_user_from_local_storage();
+
+    if (loggedInUserJSON) {
+      setUser(loggedInUserJSON);
+      setToken(loggedInUserJSON.token);
+    } else {
+      console.log("No logged in user");
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchBlogData();
+  }, [blogs]);
 
   const fetchBlogData = async () => {
     const blogs = await BlogService.getAll();
     setBlogs(blogs);
   };
-  useEffect(() => {
-    fetchBlogData();
-    console.log("get data");
-  }, []);
 
   return (
     <Container className="p-0" fluid>
-      <NavbarComponent user={user} />
-      <Row className="p-1 m-0 app-section d-flex justify-content-center align-items-center">
+      <NavbarComponent user={user} setUser={setUser} />
+      <Row className="p-1 m-0 app-section">
         {user === null && (
-          <Col lg={3} md={6} sm={6} xs={12}>
-            <LoginForm
-              user={user}
-              setUser={setUser}
-              setErrorMessage={setErrorMessage}
-            />
+          <Col
+            lg={3}
+            md={6}
+            sm={6}
+            xs={12}
+            className="d-flex flex-column justify-content-center w-100"
+          >
+            <LoginForm user={user} setUser={setUser} />
           </Col>
         )}
         {user !== null && (
-          <Col className="bg-info">
+          <Col className="mt-5 justify-content-center">
+            <AddBlog setBlogs={setBlogs} blogs={blogs} />
             <DisplayBlogs blogs={blogs} />
           </Col>
         )}
-        <Error errorMessage={errorMessage} />
       </Row>
     </Container>
   );

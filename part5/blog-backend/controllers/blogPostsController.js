@@ -48,7 +48,9 @@ const addNewBlogPost = async (req, res, next) => {
     });
 
     const savedBlogPost = await newBlogPost.save();
-    //? Add the note id to the users notes array
+    console.log("SAVED BLOG POST", savedBlogPost);
+
+    //? Add the blog id to the users notes array
     userObject.blogs = userObject.blogs.concat(savedBlogPost._id);
 
     await userObject.save();

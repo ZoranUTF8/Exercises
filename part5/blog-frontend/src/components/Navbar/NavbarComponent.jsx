@@ -2,8 +2,13 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
+import localStorageOperations from "../../utils/localStorageOperations";
 
-const NavbarComponent = ({ user }) => {
+const NavbarComponent = ({ user, setUser }) => {
+  const handleLogout = () => {
+    localStorageOperations.remove_user_from_local_storage(user);
+    setUser(null);
+  };
   return (
     <Navbar className="custom-navbar-color" expand="md">
       <Container fluid>
@@ -30,9 +35,10 @@ const NavbarComponent = ({ user }) => {
           </Nav>
         </Navbar.Collapse>
         {user && (
-          <Navbar.Collapse className="justify-content-end">
-            <Navbar.Text>Signed in as: {user.name.toUpperCase()}</Navbar.Text>
-          </Navbar.Collapse>
+          <Nav>
+            <Nav.Link>Logged in as: {user.name}</Nav.Link>
+            <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
+          </Nav>
         )}
       </Container>
     </Navbar>

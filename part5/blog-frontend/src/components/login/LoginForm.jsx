@@ -2,9 +2,12 @@ import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import LoginServices from "../../services/LoginService";
+import localStorageOperations from "../../utils/localStorageOperations";
+import { toast } from "react-toastify";
+
 import "./loginForm.css";
 
-const LoginForm = ({ user, setUser, setErrorMessage }) => {
+const LoginForm = ({ user, setUser }) => {
   const [userData, setUserData] = useState({
     username: "",
     password: "",
@@ -16,12 +19,9 @@ const LoginForm = ({ user, setUser, setErrorMessage }) => {
     try {
       const response = await LoginServices.loginUser(userData);
       setUser(response);
+      localStorageOperations.add_user_to_local_storage(response);
     } catch (error) {
-      console.log(error);
-      setErrorMessage(error.response.data.msg);
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
+      toast.error(error.response.data.msg);
     }
   };
 
@@ -34,7 +34,7 @@ const LoginForm = ({ user, setUser, setErrorMessage }) => {
 
   return (
     <Form
-      className=" content mx-auto login-form_container text-center"
+      className="content mx-auto login-form_container text-center"
       onSubmit={handleSubmit}
     >
       <Form.Group className="mb-3" controlId="formBasicEmail">

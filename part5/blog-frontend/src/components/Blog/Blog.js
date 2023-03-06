@@ -1,6 +1,6 @@
-const Blog = ({ blog }) => (
+const Blog = ({ blog, indx }) => (
   <div>
-    {blog.title} {blog.author}
+    {indx+1}:{" "} {blog.title} {blog.author}
   </div>
 );
 
