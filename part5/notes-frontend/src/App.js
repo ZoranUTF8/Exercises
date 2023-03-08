@@ -4,13 +4,14 @@ import Login from "./pages/login/Login";
 import AddNoteForm from "./components/AddNoteForm";
 import noteDbServices from "./Services/NotesDbServices";
 import DisplayNotes from "./components/DisplayNotes";
+import Togglable from "./components/Togglable";
 import Error from "./components/Error";
 import localStorageOperations from "./utils/localStorageOperations";
 import { setToken } from "./Services/NotesDbServices";
 
 const App = () => {
   const [notes, setNotes] = useState([]);
-  const [newNote, setNewNote] = useState("");
+
   const [showINotes, setShowINotes] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [user, setUser] = useState(null);
@@ -31,11 +32,7 @@ const App = () => {
   useEffect(() => {
     const loggedInUserJSON =
       localStorageOperations.get_user_from_local_storage();
-
-    console.log("JSON USER FROM LS: ", loggedInUserJSON);
-    console.log("APP STATE USER: ", user);
     if (loggedInUserJSON) {
-      console.log("Logged in user: " + loggedInUserJSON);
       setUser(loggedInUserJSON);
       setToken(loggedInUserJSON.token);
     } else {
@@ -64,12 +61,13 @@ const App = () => {
       {user === null ? (
         <Login setUser={setUser} setErrorMessage={setErrorMessage} />
       ) : (
-        <AddNoteForm
-          newNote={newNote}
-          setNewNote={setNewNote}
-          setNotes={setNotes}
-          notes={notes}
-        />
+        <Togglable buttonLabel="new note">
+          <AddNoteForm
+            setNotes={setNotes}
+            notes={notes}
+            setErrorMessage={setErrorMessage}
+          />
+        </Togglable>
       )}
       <h1>Notes</h1>
       <DisplayNotes

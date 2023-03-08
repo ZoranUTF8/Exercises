@@ -5,6 +5,11 @@ let token = null;
 
 const setToken = (newToken) => {
   token = `Bearer ${newToken}`;
+  config.headers.Authorization = token;
+};
+
+const config = {
+  headers: { Authorization: token },
 };
 
 const getAllNotes = async () => {
@@ -14,10 +19,6 @@ const getAllNotes = async () => {
 };
 
 const createNote = async (newNote) => {
-  const config = {
-    headers: { Authorization: token },
-  };
-
   const request = await axios.post(baseUrl, newNote, config);
 
   return request.data;
@@ -31,7 +32,7 @@ const updateNote = (id, updatedNote) => {
 };
 
 const deleteNote = (id) => {
-  const request = axios.delete(`${baseUrl}/${id}`);
+  const request = axios.delete(`${baseUrl}/${id}`, config);
   return request.then((res) => {
     return {
       status: res.status,

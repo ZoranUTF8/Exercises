@@ -1,7 +1,9 @@
-import React from "react";
+import { useState } from "react";
 import noteDbServices from "../Services/NotesDbServices";
 
-const AddNoteForm = ({ newNote, setNewNote, setNotes, notes }) => {
+const AddNoteForm = ({ setNotes, notes, setErrorMessage }) => {
+  const [newNote, setNewNote] = useState("");
+
   const handleChange = (e) => {
     setNewNote(e.target.value);
   };
@@ -14,11 +16,18 @@ const AddNoteForm = ({ newNote, setNewNote, setNotes, notes }) => {
       important: Math.random() < 0.5,
     };
 
-    noteDbServices.createNote(noteObject).then((newNoteFromDb) => {
-      console.log(newNoteFromDb);
-      setNotes(notes.concat(newNoteFromDb.data));
-      setNewNote("");
-    });
+    noteDbServices
+      .createNote(noteObject)
+      .then((newNoteFromDb) => {
+        setNotes(notes.concat(newNoteFromDb.data));
+        setNewNote("");
+      })
+      .catch(
+        (err) => setErrorMessage(err.response.data.msg),
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 3000)
+      );
   };
   return (
     <form onSubmit={addNote}>
