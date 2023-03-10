@@ -13,6 +13,8 @@ import { toast } from "react-toastify";
 const AddBlog = ({ setBlogs, blogs, toggleAddNoteref }) => {
   const [newBlog, setNewBlog] = useState({ title: "", author: "", url: "" });
 
+
+
   const handleChange = (e) => {
     setNewBlog((prevValues) => ({
       ...prevValues,

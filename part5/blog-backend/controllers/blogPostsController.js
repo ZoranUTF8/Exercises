@@ -43,18 +43,14 @@ const addNewBlogPost = async (req, res, next) => {
       title: req.body.title,
       author: req.body.author,
       url: req.body.url,
-      likes: req.body.likes,
       user: userObject.id,
     });
-
     const savedBlogPost = await newBlogPost.save();
-    console.log("SAVED BLOG POST", savedBlogPost);
-
     //? Add the blog id to the users notes array
-    userObject.blogs = userObject.blogs.concat(savedBlogPost._id);
+    userObject.blogs = userObject.blogs.concat(savedBlogPost.id);
 
     await userObject.save();
-
+    
     res.status(201).json({
       message: `Blog post added under id ${savedBlogPost.id}`,
       data: savedBlogPost,
@@ -105,7 +101,6 @@ const updateSingleBlogPost = async (req, res, next) => {
     author,
     url,
   };
-
 
   const updatedBlogPost = await Blog.findByIdAndUpdate(
     req.params.id,

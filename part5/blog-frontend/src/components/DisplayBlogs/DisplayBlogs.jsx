@@ -11,15 +11,19 @@ const DisplayBlogs = ({ blogs, setBlogs }) => {
       <div>
         <div className="all-blogs">
           <Accordion defaultActiveKey="0">
-            {blogs.map((blog, indx) => (
-              <Blog
-                key={blog.id}
-                blog={blog}
-                indx={indx}
-                setBlogs={setBlogs}
-                blogs={blogs}
-              />
-            ))}
+            {blogs
+              .sort((a, b) => {
+                return b.likes - a.likes;
+              })
+              .map((blog, indx) => (
+                <Blog
+                  key={blog.id}
+                  blog={blog}
+                  indx={indx}
+                  setBlogs={setBlogs}
+                  blogs={blogs}
+                />
+              ))}
           </Accordion>
         </div>
       </div>

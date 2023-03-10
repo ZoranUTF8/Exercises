@@ -26,6 +26,7 @@ const createUserTokenAndSendResponse = async (res, user) => {
   receivedUser.token = token;
   // res.cookie("JWT_STORAGE", token, cookieOptions);
 
+  
   return res.status(STATUS_CODES.OK).json({
     status: "success",
     data: receivedUser,

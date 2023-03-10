@@ -18,7 +18,7 @@ const LoginForm = ({ user, setUser, setRegistered }) => {
 
     try {
       const response = await LoginServices.loginUser(userData);
-      setUser(response.data);
+      setUser(response);
       localStorageOperations.add_user_to_local_storage(response);
       toast.success("Successfully logged in.");
     } catch (error) {
