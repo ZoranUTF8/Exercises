@@ -1,7 +1,7 @@
 import { useState } from "react";
 import noteDbServices from "../Services/NotesDbServices";
 
-const AddNoteForm = ({ setNotes, notes, setErrorMessage }) => {
+const AddNoteForm = ({ setNotes, notes, setErrorMessage, toggleVisref }) => {
   const [newNote, setNewNote] = useState("");
 
   const handleChange = (e) => {
@@ -15,6 +15,9 @@ const AddNoteForm = ({ setNotes, notes, setErrorMessage }) => {
       content: newNote,
       important: Math.random() < 0.5,
     };
+
+    toggleVisref.current.toggleVisibility();
+    console.log(toggleVisref.current.count);
 
     noteDbServices
       .createNote(noteObject)

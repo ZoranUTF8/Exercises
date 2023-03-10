@@ -18,5 +18,5 @@ router
   .route("/:id")
   .get(getSingleBlogPost)
   .delete(authenticateUserRequest, deleteSingleBlogPost)
-  .put(updateSingleBlogPost);
+  .put(authenticateUserRequest, updateSingleBlogPost);
 module.exports = router;

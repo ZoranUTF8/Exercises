@@ -1,5 +1,5 @@
 import "./App.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Login from "./pages/login/Login";
 import AddNoteForm from "./components/AddNoteForm";
 import noteDbServices from "./Services/NotesDbServices";
@@ -15,6 +15,8 @@ const App = () => {
   const [showINotes, setShowINotes] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [user, setUser] = useState(null);
+  const toggleVisref = useRef();
+
 
   //* Fetch data from db
   useEffect(() => {
@@ -52,6 +54,7 @@ const App = () => {
   };
 
   return (
+
     <div>
       {user && (
         <div>
@@ -61,11 +64,12 @@ const App = () => {
       {user === null ? (
         <Login setUser={setUser} setErrorMessage={setErrorMessage} />
       ) : (
-        <Togglable buttonLabel="new note">
+        <Togglable buttonLabel="new note" ref={toggleVisref}>
           <AddNoteForm
             setNotes={setNotes}
             notes={notes}
             setErrorMessage={setErrorMessage}
+            toggleVisref={toggleVisref}
           />
         </Togglable>
       )}

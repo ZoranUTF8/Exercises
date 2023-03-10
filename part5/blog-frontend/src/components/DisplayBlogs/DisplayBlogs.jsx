@@ -1,14 +1,28 @@
 import React from "react";
 import Blog from "../Blog/Blog";
+import Accordion from "react-bootstrap/Accordion";
 
-const DisplayBlogs = ({ blogs }) => {
+const DisplayBlogs = ({ blogs, setBlogs }) => {
   return (
-    <div className="all-blogs-display p-5 text-center mx-auto text-white w-50">
-      <h2 className="text-center mt-3">All blog posts</h2>
-      <hr />
-      {blogs.map((blog, indx) => (
-        <Blog key={blog.id} blog={blog} indx={indx} />
-      ))}
+    <div className=" text-center mx-auto w-100 ">
+      <div className="all-blogs-display  mb-3">
+        <h2 className="mt-3">Published blog posts</h2>
+      </div>
+      <div>
+        <div className="all-blogs">
+          <Accordion defaultActiveKey="0">
+            {blogs.map((blog, indx) => (
+              <Blog
+                key={blog.id}
+                blog={blog}
+                indx={indx}
+                setBlogs={setBlogs}
+                blogs={blogs}
+              />
+            ))}
+          </Accordion>
+        </div>
+      </div>
     </div>
   );
 };

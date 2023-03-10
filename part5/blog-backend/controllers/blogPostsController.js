@@ -93,7 +93,9 @@ const deleteSingleBlogPost = async (req, res, next) => {
   }
 };
 
-// //* Update blog post
+//* Update blog post
+//? Add the user id who liked the post.
+
 const updateSingleBlogPost = async (req, res, next) => {
   const { author, likes, title, url } = req.body;
 
@@ -103,6 +105,7 @@ const updateSingleBlogPost = async (req, res, next) => {
     author,
     url,
   };
+
 
   const updatedBlogPost = await Blog.findByIdAndUpdate(
     req.params.id,

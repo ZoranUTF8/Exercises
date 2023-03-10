@@ -5,7 +5,6 @@ const { UnauthenticatedError, CustomAPIError } = require("./customErrors");
 
 const authenticateUserRequest = async (req, res, next) => {
   const authorizationHeader = req.get("authorization");
-  
   if (!authorizationHeader || !authorizationHeader.startsWith("Bearer")) {
     return next(new UnauthenticatedError());
   }

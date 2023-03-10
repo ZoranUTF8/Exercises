@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 
 import "./loginForm.css";
 
-const LoginForm = ({ user, setUser }) => {
+const LoginForm = ({ user, setUser, setRegistered }) => {
   const [userData, setUserData] = useState({
     username: "",
     password: "",
@@ -18,8 +18,9 @@ const LoginForm = ({ user, setUser }) => {
 
     try {
       const response = await LoginServices.loginUser(userData);
-      setUser(response);
+      setUser(response.data);
       localStorageOperations.add_user_to_local_storage(response);
+      toast.success("Successfully logged in.");
     } catch (error) {
       toast.error(error.response.data.msg);
     }
@@ -58,7 +59,12 @@ const LoginForm = ({ user, setUser }) => {
           onChange={handleChange}
         />
       </Form.Group>
-
+      <p
+        className="toggleLoginOption"
+        onClick={() => setRegistered((prevValue) => !prevValue)}
+      >
+        Don't have an account?
+      </p>
       <Button variant="primary" type="submit">
         Submit
       </Button>

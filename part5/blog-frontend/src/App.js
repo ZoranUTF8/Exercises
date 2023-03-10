@@ -1,5 +1,5 @@
 import "./App.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import localStorageOperations from "./utils/localStorageOperations";
 //* App imports
 import {
@@ -7,6 +7,8 @@ import {
   NavbarComponent,
   LoginForm,
   AddBlog,
+  Togglable,
+  Register,
 } from "./components/Index";
 import { setToken } from "./services/BlogService";
 
@@ -15,10 +17,13 @@ import BlogService from "./services/BlogService";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Stack from "react-bootstrap/Stack";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
+  const [registered, setRegistered] = useState(false);
+  const toggleAddNoteref = useRef();
 
   //* Check if user logged in
   useEffect(() => {
@@ -34,8 +39,9 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    console.log("fetch");
     fetchBlogData();
-  }, [blogs]);
+  }, []);
 
   const fetchBlogData = async () => {
     const blogs = await BlogService.getAll();
@@ -54,13 +60,29 @@ const App = () => {
             xs={12}
             className="d-flex flex-column justify-content-center w-100"
           >
-            <LoginForm user={user} setUser={setUser} />
+            {registered ? (
+              <LoginForm
+                user={user}
+                setUser={setUser}
+                setRegistered={setRegistered}
+              />
+            ) : (
+              <Register setUser={setUser} setRegistered={setRegistered} />
+            )}
           </Col>
         )}
         {user !== null && (
-          <Col className="mt-5 justify-content-center">
-            <AddBlog setBlogs={setBlogs} blogs={blogs} />
-            <DisplayBlogs blogs={blogs} />
+          <Col lg={12} className="mt-5">
+            <Stack gap={3}>
+              <Togglable buttonLabel="Add note" ref={toggleAddNoteref}>
+                <AddBlog
+                  setBlogs={setBlogs}
+                  blogs={blogs}
+                  toggleAddNoteref={toggleAddNoteref}
+                />
+              </Togglable>
+              <DisplayBlogs blogs={blogs} setBlogs={setBlogs} />
+            </Stack>
           </Col>
         )}
       </Row>

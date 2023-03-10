@@ -10,7 +10,7 @@ import {
 import BlogService from "../../services/BlogService";
 import { toast } from "react-toastify";
 
-const AddBlog = ({ setBlogs, blogs }) => {
+const AddBlog = ({ setBlogs, blogs, toggleAddNoteref }) => {
   const [newBlog, setNewBlog] = useState({ title: "", author: "", url: "" });
 
   const handleChange = (e) => {
@@ -26,11 +26,12 @@ const AddBlog = ({ setBlogs, blogs }) => {
     const response = await BlogService.addNewBlog(newBlog);
 
     setBlogs(blogs.concat(response.data));
-    
+
     setNewBlog({ title: "", author: "", url: "" });
     toast.success(
       `A new blog ${response.data.title} ! By ${response.data.author} added.`
     );
+    toggleAddNoteref.current.toggleVisibility();
   };
 
   return (
@@ -38,7 +39,7 @@ const AddBlog = ({ setBlogs, blogs }) => {
       <h2>AddBlog</h2>
       <Container>
         <Row className="justify-content-center mb-3">
-          <Col md={6}>
+          <Col sm={12} md={6} >
             <Form onSubmit={handleSubmit}>
               <Form.Group controlId="formTitle">
                 <Form.Label>Title</Form.Label>
