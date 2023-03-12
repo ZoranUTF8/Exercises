@@ -1,13 +1,14 @@
 import { useState } from "react";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import LoginServices from "../../services/LoginService";
-import localStorageOperations from "../../utils/localStorageOperations";
-import { toast } from "react-toastify";
 
 import "./loginForm.css";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import * as LoginServices from "../../services/LoginService";
+import * as localStorageOperations from "../../utils/localStorageOperations";
+import { toast } from "react-toastify";
+import PropTypes from "prop-types";
 
-const LoginForm = ({ user, setUser, setRegistered }) => {
+const LoginForm = ({ setUser, setRegistered }) => {
   const [userData, setUserData] = useState({
     username: "",
     password: "",
@@ -70,6 +71,11 @@ const LoginForm = ({ user, setUser, setRegistered }) => {
       </Button>
     </Form>
   );
+};
+
+LoginForm.propTypes = {
+  setUser: PropTypes.func.isRequired,
+  setRegistered: PropTypes.func.isRequired,
 };
 
 export default LoginForm;

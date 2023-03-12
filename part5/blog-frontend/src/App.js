@@ -1,6 +1,6 @@
 import "./App.css";
 import { useState, useEffect, useRef } from "react";
-import localStorageOperations from "./utils/localStorageOperations";
+import * as localStorageOperations from "./utils/localStorageOperations";
 //* App imports
 import {
   DisplayBlogs,
@@ -61,11 +61,7 @@ const App = () => {
             className="d-flex flex-column justify-content-center w-100"
           >
             {registered ? (
-              <LoginForm
-                user={user}
-                setUser={setUser}
-                setRegistered={setRegistered}
-              />
+              <LoginForm setUser={setUser} setRegistered={setRegistered} />
             ) : (
               <Register setUser={setUser} setRegistered={setRegistered} />
             )}

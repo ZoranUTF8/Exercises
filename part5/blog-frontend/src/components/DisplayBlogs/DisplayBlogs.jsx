@@ -1,6 +1,7 @@
 import React from "react";
 import Blog from "../Blog/Blog";
 import Accordion from "react-bootstrap/Accordion";
+import PropTypes from "prop-types";
 
 const DisplayBlogs = ({ blogs, setBlogs }) => {
   return (
@@ -30,5 +31,8 @@ const DisplayBlogs = ({ blogs, setBlogs }) => {
     </div>
   );
 };
-
+DisplayBlogs.propTypes = {
+  blogs: PropTypes.array.isRequired,
+  setBlogs: PropTypes.func.isRequired,
+};
 export default DisplayBlogs;

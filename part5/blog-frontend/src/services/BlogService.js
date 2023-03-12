@@ -23,6 +23,7 @@ const addNewBlog = async (newBlog) => {
 };
 
 const updateBlogLikeCount = async (currentBlog) => {
+  console.log(config);
   const response = await axios.put(
     `${baseUrl}/${currentBlog.id}`,
     currentBlog,
@@ -31,6 +32,11 @@ const updateBlogLikeCount = async (currentBlog) => {
 
   return response.data;
 };
+
+const deleteBlogPost = async (blogId) => {
+  const response = await axios.delete(`${baseUrl}/${blogId}`, config);
+  return response.data;
+};
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getAll, addNewBlog, updateBlogLikeCount };
+export default { getAll, addNewBlog, updateBlogLikeCount, deleteBlogPost };
 export { setToken };

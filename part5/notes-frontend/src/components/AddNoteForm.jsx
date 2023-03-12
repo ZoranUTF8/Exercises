@@ -1,6 +1,6 @@
 import { useState } from "react";
 import noteDbServices from "../Services/NotesDbServices";
-
+import PropTypes from "prop-types";
 const AddNoteForm = ({ setNotes, notes, setErrorMessage, toggleVisref }) => {
   const [newNote, setNewNote] = useState("");
 
@@ -40,4 +40,10 @@ const AddNoteForm = ({ setNotes, notes, setErrorMessage, toggleVisref }) => {
   );
 };
 
+AddNoteForm.propTypes = {
+  setNotes: PropTypes.string.isRequired,
+  notes: PropTypes.string.isRequired,
+  setErrorMessage: PropTypes.string.isRequired,
+  toggleVisref: PropTypes.string.isRequired,
+};
 export default AddNoteForm;

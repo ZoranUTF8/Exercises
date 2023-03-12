@@ -50,7 +50,7 @@ const addNewBlogPost = async (req, res, next) => {
     userObject.blogs = userObject.blogs.concat(savedBlogPost.id);
 
     await userObject.save();
-    
+
     res.status(201).json({
       message: `Blog post added under id ${savedBlogPost.id}`,
       data: savedBlogPost,

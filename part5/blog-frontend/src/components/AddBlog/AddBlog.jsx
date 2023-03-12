@@ -9,11 +9,10 @@ import {
 } from "react-bootstrap";
 import BlogService from "../../services/BlogService";
 import { toast } from "react-toastify";
+import PropTypes from "prop-types";
 
 const AddBlog = ({ setBlogs, blogs, toggleAddNoteref }) => {
   const [newBlog, setNewBlog] = useState({ title: "", author: "", url: "" });
-
-
 
   const handleChange = (e) => {
     setNewBlog((prevValues) => ({
@@ -41,7 +40,7 @@ const AddBlog = ({ setBlogs, blogs, toggleAddNoteref }) => {
       <h2>AddBlog</h2>
       <Container>
         <Row className="justify-content-center mb-3">
-          <Col sm={12} md={6} >
+          <Col sm={12} md={6}>
             <Form onSubmit={handleSubmit}>
               <Form.Group controlId="formTitle">
                 <Form.Label>Title</Form.Label>
@@ -91,6 +90,11 @@ const AddBlog = ({ setBlogs, blogs, toggleAddNoteref }) => {
       </Container>
     </div>
   );
+};
+AddBlog.propTypes = {
+  setBlogs: PropTypes.func.isRequired,
+  blogs: PropTypes.array.isRequired,
+  toggleAddNoteref: PropTypes.object.isRequired,
 };
 
 export default AddBlog;

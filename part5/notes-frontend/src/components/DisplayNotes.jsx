@@ -1,6 +1,7 @@
 import React from "react";
 import noteDbServices from "../Services/NotesDbServices";
 import Note from "./Note";
+import PropTypes from "prop-types";
 
 const DisplayNotes = ({ notes, setNotes, filteredNotes }) => {
   const deleteNote = (id) => {
@@ -44,6 +45,11 @@ const DisplayNotes = ({ notes, setNotes, filteredNotes }) => {
       </ul>
     </div>
   );
+};
+DisplayNotes.propTypes = {
+  notes: PropTypes.string.isRequired,
+  setNotes: PropTypes.string.isRequired,
+  filteredNotes: PropTypes.string.isRequired,
 };
 
 export default DisplayNotes;

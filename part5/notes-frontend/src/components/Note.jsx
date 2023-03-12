@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 const Note = ({ id, content, important, toggleImportance, deleteNote }) => {
   const importanceLevel = important ? "Not important" : "Important";
 
@@ -11,5 +13,10 @@ const Note = ({ id, content, important, toggleImportance, deleteNote }) => {
     </>
   );
 };
-
+Note.propTypes = {
+  id: PropTypes.string.isRequired,
+  content: PropTypes.string.isRequired,
+  toggleImportance: PropTypes.string.isRequired,
+  deleteNote: PropTypes.string.isRequired,
+};
 export default Note;

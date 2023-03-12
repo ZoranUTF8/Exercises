@@ -1,10 +1,11 @@
 import { useState } from "react";
 import "../login/loginForm.css";
-import localStorageOperations from "../../utils/localStorageOperations";
+import * as localStorageOperations from "../../utils/localStorageOperations";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import RegisterService from "../../services/RegisterService";
 import { toast } from "react-toastify";
+import PropTypes from "prop-types";
 
 const initialState = { username: "", name: "", password: "" };
 const Register = ({ setUser, setRegistered }) => {
@@ -94,6 +95,10 @@ const Register = ({ setUser, setRegistered }) => {
       </Button>
     </Form>
   );
+};
+Register.propTypes = {
+  setUser: PropTypes.func.isRequired,
+  setRegistered: PropTypes.func.isRequired,
 };
 
 export default Register;

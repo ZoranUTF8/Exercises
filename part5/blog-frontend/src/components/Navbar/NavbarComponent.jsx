@@ -2,7 +2,8 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import localStorageOperations from "../../utils/localStorageOperations";
+import * as localStorageOperations from "../../utils/localStorageOperations";
+import PropTypes from "prop-types";
 
 const NavbarComponent = ({ user, setUser }) => {
   const handleLogout = () => {
@@ -44,5 +45,8 @@ const NavbarComponent = ({ user, setUser }) => {
     </Navbar>
   );
 };
-
+NavbarComponent.propTypes = {
+  user: PropTypes.oneOfType([PropTypes.object, PropTypes.oneOf([null])]),
+  setUser: PropTypes.func.isRequired,
+};
 export default NavbarComponent;

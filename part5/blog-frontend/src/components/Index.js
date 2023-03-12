@@ -5,6 +5,7 @@ import NavbarComponent from "./Navbar/NavbarComponent";
 import AddBlog from "./AddBlog/AddBlog";
 import Togglable from "./Togglable/Togglable";
 import Register from "./Register/Register";
+import YesNoModal from "./Modal/YesNoModal";
 export {
   Blog,
   LoginForm,
@@ -13,4 +14,5 @@ export {
   AddBlog,
   Togglable,
   Register,
+  YesNoModal,
 };
