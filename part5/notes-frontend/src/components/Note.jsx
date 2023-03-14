@@ -14,9 +14,9 @@ const Note = ({ id, content, important, toggleImportance, deleteNote }) => {
   );
 };
 Note.propTypes = {
-  id: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
   content: PropTypes.string.isRequired,
-  toggleImportance: PropTypes.string.isRequired,
-  deleteNote: PropTypes.string.isRequired,
+  toggleImportance: PropTypes.func.isRequired,
+  deleteNote: PropTypes.func.isRequired,
 };
 export default Note;
