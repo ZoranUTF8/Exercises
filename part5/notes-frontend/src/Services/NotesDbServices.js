@@ -21,7 +21,6 @@ const getAllNotes = async () => {
 
 const createNote = async (newNote) => {
   const request = await axios.post(baseUrl, newNote, config);
-
   return request.data;
 };
 

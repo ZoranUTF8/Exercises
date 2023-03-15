@@ -9,6 +9,7 @@ const authenticateJWT = async (req, res, next) => {
   if (!authorizationHeader || !authorizationHeader.startsWith("Bearer")) {
     return next(new UnauthenticatedError());
   }
+
   const token = authorizationHeader.split(" ")[1];
 
   const decodedToken = await jwt.verify(token, process.env.JWT_SECRET);

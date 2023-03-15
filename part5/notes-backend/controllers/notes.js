@@ -7,7 +7,7 @@ const Note = require("../Models/note");
 //* Get  all notes
 notesRouter.get("/", async (req, res) => {
   const notes = await Note.find({}).populate("user", { username: 1, name: 1 });
-  res.json(notes);
+  res.status(200).json(notes);
 });
 
 //* Get single note

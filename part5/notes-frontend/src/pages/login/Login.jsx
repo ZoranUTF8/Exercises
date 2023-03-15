@@ -2,7 +2,6 @@ import "./login.css";
 import { useState } from "react";
 import LoginServices from "../../Services/LoginServices";
 
-
 const Login = ({ setUser, setErrorMessage }) => {
   const [userLoginData, setUserLoginData] = useState({
     username: "",
@@ -60,7 +59,9 @@ const Login = ({ setUser, setErrorMessage }) => {
           onChange={handleChange}
         />
 
-        <button type="submit">Submit</button>
+        <button id="login-button" type="submit">
+          Submit
+        </button>
       </form>
     </div>
   );

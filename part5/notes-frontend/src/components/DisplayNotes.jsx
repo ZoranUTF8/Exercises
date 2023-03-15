@@ -47,9 +47,9 @@ const DisplayNotes = ({ notes, setNotes, filteredNotes }) => {
   );
 };
 DisplayNotes.propTypes = {
-  notes: PropTypes.string.isRequired,
-  setNotes: PropTypes.string.isRequired,
-  filteredNotes: PropTypes.string.isRequired,
+  notes: PropTypes.array.isRequired,
+  setNotes: PropTypes.func.isRequired,
+  filteredNotes: PropTypes.array.isRequired,
 };
 
 export default DisplayNotes;
