@@ -22,6 +22,8 @@ const usersRouter = require("./controllers/users");
 
 const loginRouter = require("./controllers/login");
 
+//? Testing router
+
 const middleware = require("./utils/middleware");
 
 const mongoose = require("mongoose");
@@ -49,6 +51,13 @@ app.use(express.json());
 app.use("/api/notes", notesRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/login", loginRouter);
+
+//? Test routes
+if (process.env.NODE_ENV === "test") {
+  console.log("NODE ENV IS TEST");
+  const testingRouter = require("./controllers/TestRoutes");
+  app.use("/api/testing", testingRouter);
+}
 
 //! handler of requests with unknown endpoint
 app.use(middleware.unknownEndpoint);

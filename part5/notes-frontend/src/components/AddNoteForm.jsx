@@ -13,7 +13,7 @@ const AddNoteForm = ({ setNotes, notes, setErrorMessage, toggleVisref }) => {
 
     const noteObject = {
       content: newNote,
-      important: Math.random() < 0.5,
+      important: true,
     };
 
     toggleVisref.current.toggleVisibility();
@@ -33,7 +33,12 @@ const AddNoteForm = ({ setNotes, notes, setErrorMessage, toggleVisref }) => {
   };
   return (
     <form onSubmit={addNote}>
-      <input id="newNoteInput" value={newNote} onChange={handleChange} placeholder="New note" />
+      <input
+        id="newNoteInput"
+        value={newNote}
+        onChange={handleChange}
+        placeholder="New note"
+      />
       <button type="submit">save</button>
     </form>
   );
