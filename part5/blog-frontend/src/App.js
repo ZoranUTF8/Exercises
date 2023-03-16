@@ -39,7 +39,6 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    console.log("fetch");
     fetchBlogData();
   }, []);
 
@@ -61,9 +60,9 @@ const App = () => {
             className="d-flex flex-column justify-content-center w-100"
           >
             {registered ? (
-              <LoginForm setUser={setUser} setRegistered={setRegistered} />
-            ) : (
               <Register setUser={setUser} setRegistered={setRegistered} />
+            ) : (
+              <LoginForm setUser={setUser} setRegistered={setRegistered} />
             )}
           </Col>
         )}

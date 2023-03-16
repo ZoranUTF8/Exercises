@@ -33,6 +33,7 @@ logger.info("connecting to", config.MONGODB_URI);
 mongoose
   .connect(config.MONGODB_URI)
   .then((result) => {
+    console.log(`Connected to ${process.env.TEST_MONGODB_URI}`);
     logger.info("connected to MongoDB blog posts database");
   })
   .catch((error) => {
@@ -48,6 +49,11 @@ app.use("/api/blogs", blogRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/auth", authRouter);
 
+//! Testing routes
+if (process.env.NODE_ENV === "test") {
+  const testingRouter = require("./routers/testingRouter");
+  app.use("/api/testing", testingRouter);
+}
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandlerMiddleware);
 

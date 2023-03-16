@@ -52,6 +52,7 @@ const AddBlog = ({ setBlogs, blogs, toggleAddNoteref }) => {
                   required
                   minLength={5}
                   name="title"
+                  id="newBlogTitle"
                 />
               </Form.Group>
 
@@ -65,6 +66,7 @@ const AddBlog = ({ setBlogs, blogs, toggleAddNoteref }) => {
                   required
                   minLength={5}
                   name="author"
+                  id="newBlogAuthor"
                 />
               </Form.Group>
 
@@ -78,10 +80,11 @@ const AddBlog = ({ setBlogs, blogs, toggleAddNoteref }) => {
                   required
                   minLength={5}
                   name="url"
+                  id="newBlogUrl"
                 />
               </Form.Group>
 
-              <Button variant="primary" type="submit" className="mt-3">
+              <Button id="addBlogSubmitBtn" variant="primary" type="submit" className="mt-3">
                 Submit
               </Button>
             </Form>

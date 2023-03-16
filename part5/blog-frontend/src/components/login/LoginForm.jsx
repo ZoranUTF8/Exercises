@@ -42,6 +42,7 @@ const LoginForm = ({ setUser, setRegistered }) => {
       <Form.Group className="mb-3" controlId="formBasicEmail">
         <Form.Label>Username</Form.Label>
         <Form.Control
+          id="login-username"
           type="text"
           placeholder="Username"
           value={userData.username}
@@ -53,6 +54,7 @@ const LoginForm = ({ setUser, setRegistered }) => {
       <Form.Group className="mb-3" controlId="formBasicPassword">
         <Form.Label>Password</Form.Label>
         <Form.Control
+          id="login-password"
           type="password"
           placeholder="Password"
           value={userData.password}
@@ -66,8 +68,8 @@ const LoginForm = ({ setUser, setRegistered }) => {
       >
         Don't have an account?
       </p>
-      <Button variant="primary" type="submit">
-        Submit
+      <Button id="login-btn" variant="primary" type="submit">
+        Login
       </Button>
     </Form>
   );

@@ -91,7 +91,7 @@ const Register = ({ setUser, setRegistered }) => {
         Have an account?
       </p>
       <Button variant="primary" type="submit">
-        Submit
+        Register
       </Button>
     </Form>
   );
