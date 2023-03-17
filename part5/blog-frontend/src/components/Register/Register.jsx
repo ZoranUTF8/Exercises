@@ -24,9 +24,9 @@ const Register = ({ setUser, setRegistered }) => {
     if (termsAccepted === false) {
       return toast.error("You must accept the terms.");
     }
+
     try {
       const response = await RegisterService.registerUser(newUser);
-
       setUser(response.data);
       localStorageOperations.add_user_to_local_storage(response.data);
       toast.success("You successfully registered.");

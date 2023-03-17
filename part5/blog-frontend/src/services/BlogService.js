@@ -18,12 +18,13 @@ const getAll = async () => {
 };
 
 const addNewBlog = async (newBlog) => {
+
   const response = await axios.post(baseUrl, newBlog, config);
   return response.data;
 };
 
 const updateBlogLikeCount = async (currentBlog) => {
-  console.log(config);
+
   const response = await axios.put(
     `${baseUrl}/${currentBlog.id}`,
     currentBlog,

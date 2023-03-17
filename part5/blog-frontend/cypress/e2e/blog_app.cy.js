@@ -22,7 +22,7 @@ Cypress.Commands.add("createBlog", ({ title, author, url }) => {
   cy.request({
     url: "http://localhost:3001/api/blogs",
     method: "POST",
-    body: { title, author,url },
+    body: { title, author, url },
     headers: {
       Authorization: `Bearer ${JSON.parse(localStorage.getItem("user")).token}`,
     },
@@ -79,8 +79,28 @@ describe("Blog app", () => {
       cy.contains("Test blog title");
     });
 
-    describe("When a blog exists", function () {
-      
+    describe("When blog post esists", function () {
+      beforeEach(function () {
+        cy.createBlog({
+          title: "Test blog title",
+          author: "Test Author",
+          url: "www.test.com",
+        });
+      });
+
+      it("Blog can be liked", function () {
+        cy.contains("Test blog title").click();
+
+        cy.contains("Likes: 0");
+        cy.get("#single_blog_like_btn").click();
+        cy.contains("Likes: 1");
+      });
+
+      it.only("User who created a blog can delete it", function () {
+        cy.contains("Test blog title").click();
+        cy.get("#single_blog_delete_btn").click();
+        cy.contains("Ok").click();
+      });
     });
   });
 });

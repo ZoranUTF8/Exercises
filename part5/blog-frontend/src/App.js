@@ -74,9 +74,10 @@ const App = () => {
                   setBlogs={setBlogs}
                   blogs={blogs}
                   toggleAddNoteref={toggleAddNoteref}
+                  setUser={setUser}
                 />
               </Togglable>
-              <DisplayBlogs blogs={blogs} setBlogs={setBlogs} />
+              <DisplayBlogs blogs={blogs} setBlogs={setBlogs} user={user} />
             </Stack>
           </Col>
         )}

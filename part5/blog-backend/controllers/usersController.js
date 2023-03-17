@@ -10,7 +10,6 @@ const createPasswordHash = async (passwordIn) => {
 // * Create new user
 const addNewUser = async (req, res, next) => {
   const { username, name, password } = req.body;
-
   if (
     !name ||
     !username ||

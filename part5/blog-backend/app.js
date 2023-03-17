@@ -33,7 +33,7 @@ logger.info("connecting to", config.MONGODB_URI);
 mongoose
   .connect(config.MONGODB_URI)
   .then((result) => {
-    console.log(`Connected to ${process.env.TEST_MONGODB_URI}`);
+    console.log(`Connected to `, config.MONGODB_URI);
     logger.info("connected to MongoDB blog posts database");
   })
   .catch((error) => {

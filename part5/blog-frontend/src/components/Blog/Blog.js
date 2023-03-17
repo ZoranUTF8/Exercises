@@ -4,8 +4,9 @@ import Accordion from "react-bootstrap/Accordion";
 import BlogService from "../../services/BlogService";
 import YesNoModal from "../Modal/YesNoModal";
 import PropTypes from "prop-types";
+import { toast } from "react-toastify";
 
-const Blog = ({ blog, indx, setBlogs, blogs }) => {
+const Blog = ({ blog, indx, setBlogs, blogs, user }) => {
   const [showModal, setShowModal] = useState(false);
 
   const toggleModal = () => setShowModal((prevValue) => !prevValue);
@@ -22,12 +23,20 @@ const Blog = ({ blog, indx, setBlogs, blogs }) => {
   };
 
   const deleteSingleBlog = async () => {
-    const response = await BlogService.deleteBlogPost(blog.id);
-    setBlogs(blogs.filter((prevBlog) => prevBlog.id !== response.data.id));
+    if (userIsBlogOwner(user)) {
+      const response = await BlogService.deleteBlogPost(blog.id);
+      setBlogs(blogs.filter((prevBlog) => prevBlog.id !== response.data.id));
+      toast.success(`Blog post deleted successfully.`);
+    } else {
+      toast.error("You are not the blog post owner.");
+    }
 
     toggleModal();
   };
 
+  const userIsBlogOwner = (user) => {
+    return user.blogs.includes(blog.id);
+  };
   return (
     <>
       <Accordion.Item eventKey={indx}>
@@ -44,15 +53,22 @@ const Blog = ({ blog, indx, setBlogs, blogs }) => {
             </a>
           </p>
           <br />
-          <p>Likes: {blog.likes} </p>
-          <Button variant="primary" size="sm" onClick={updateLikeCount}>
+          <p id="single_blog_like_count">Likes: {blog.likes} </p>
+          <Button
+            id="single_blog_like_btn"
+            variant="primary"
+            size="sm"
+            onClick={updateLikeCount}
+          >
             Like
           </Button>
           <Button
+            id="single_blog_delete_btn"
             variant="primary"
             size="sm"
             onClick={toggleModal}
             className="ms-2"
+            disabled={!userIsBlogOwner(user)}
           >
             Delete
           </Button>
@@ -77,4 +93,3 @@ Blog.propTypes = {
 };
 
 export default Blog;
-

@@ -40,6 +40,7 @@ const login = async (req, res, next) => {
   const passwordCorrect =
     user === null ? false : await bcrypt.compare(password, user.passwordHash);
 
+
   if (!(user && passwordCorrect)) {
     return next(new WrongCredentialsError("Invalid credentials"));
   }

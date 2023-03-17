@@ -11,7 +11,7 @@ import BlogService from "../../services/BlogService";
 import { toast } from "react-toastify";
 import PropTypes from "prop-types";
 
-const AddBlog = ({ setBlogs, blogs, toggleAddNoteref }) => {
+const AddBlog = ({ setBlogs, blogs, toggleAddNoteref, setUser }) => {
   const [newBlog, setNewBlog] = useState({ title: "", author: "", url: "" });
 
   const handleChange = (e) => {
@@ -25,9 +25,11 @@ const AddBlog = ({ setBlogs, blogs, toggleAddNoteref }) => {
     e.preventDefault();
 
     const response = await BlogService.addNewBlog(newBlog);
-
     setBlogs(blogs.concat(response.data));
-
+    setUser((prevUser) => ({
+      ...prevUser,
+      blogs: [...prevUser.blogs, response.data.id],
+    }));
     setNewBlog({ title: "", author: "", url: "" });
     toast.success(
       `A new blog ${response.data.title} ! By ${response.data.author} added.`
@@ -42,7 +44,7 @@ const AddBlog = ({ setBlogs, blogs, toggleAddNoteref }) => {
         <Row className="justify-content-center mb-3">
           <Col sm={12} md={6}>
             <Form onSubmit={handleSubmit}>
-              <Form.Group controlId="formTitle">
+              <Form.Group controlId="title">
                 <Form.Label>Title</Form.Label>
                 <FormControl
                   type="text"
@@ -52,11 +54,10 @@ const AddBlog = ({ setBlogs, blogs, toggleAddNoteref }) => {
                   required
                   minLength={5}
                   name="title"
-                  id="newBlogTitle"
                 />
               </Form.Group>
 
-              <Form.Group controlId="formAuthor">
+              <Form.Group controlId="author">
                 <Form.Label>Author</Form.Label>
                 <FormControl
                   type="text"
@@ -66,11 +67,10 @@ const AddBlog = ({ setBlogs, blogs, toggleAddNoteref }) => {
                   required
                   minLength={5}
                   name="author"
-                  id="newBlogAuthor"
                 />
               </Form.Group>
 
-              <Form.Group controlId="formUrl">
+              <Form.Group controlId="url">
                 <Form.Label>URL</Form.Label>
                 <FormControl
                   type="text"
@@ -80,11 +80,10 @@ const AddBlog = ({ setBlogs, blogs, toggleAddNoteref }) => {
                   required
                   minLength={5}
                   name="url"
-                  id="newBlogUrl"
                 />
               </Form.Group>
 
-              <Button id="addBlogSubmitBtn" variant="primary" type="submit" className="mt-3">
+              <Button variant="primary" type="submit" className="mt-3">
                 Submit
               </Button>
             </Form>

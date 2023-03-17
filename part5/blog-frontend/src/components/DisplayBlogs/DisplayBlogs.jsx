@@ -3,7 +3,7 @@ import Blog from "../Blog/Blog";
 import Accordion from "react-bootstrap/Accordion";
 import PropTypes from "prop-types";
 
-const DisplayBlogs = ({ blogs, setBlogs }) => {
+const DisplayBlogs = ({ blogs, setBlogs, user }) => {
   return (
     <div className=" text-center mx-auto w-100 ">
       <div className="all-blogs-display  mb-3">
@@ -23,6 +23,7 @@ const DisplayBlogs = ({ blogs, setBlogs }) => {
                   indx={indx}
                   setBlogs={setBlogs}
                   blogs={blogs}
+                  user={user}
                 />
               ))}
           </Accordion>
