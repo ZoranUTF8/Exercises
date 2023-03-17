@@ -5,6 +5,7 @@ import BlogService from "../../services/BlogService";
 import YesNoModal from "../Modal/YesNoModal";
 import PropTypes from "prop-types";
 import { toast } from "react-toastify";
+import localStorageOperations from "../../utils/localStorageOperations";
 
 const Blog = ({ blog, indx, setBlogs, blogs, user }) => {
   const [showModal, setShowModal] = useState(false);
@@ -35,8 +36,13 @@ const Blog = ({ blog, indx, setBlogs, blogs, user }) => {
   };
 
   const userIsBlogOwner = (user) => {
+    console.log("USER: ", user);
+    console.log("BLOG: ", blog);
     return user.blogs.includes(blog.id);
   };
+
+  console.log("BLOGS : ", user.blogs, " BLOG ID ", blog);
+
   return (
     <>
       <Accordion.Item eventKey={indx}>

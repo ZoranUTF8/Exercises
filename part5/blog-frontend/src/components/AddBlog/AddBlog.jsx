@@ -30,6 +30,7 @@ const AddBlog = ({ setBlogs, blogs, toggleAddNoteref, setUser }) => {
       ...prevUser,
       blogs: [...prevUser.blogs, response.data.id],
     }));
+    
     setNewBlog({ title: "", author: "", url: "" });
     toast.success(
       `A new blog ${response.data.title} ! By ${response.data.author} added.`
@@ -67,6 +68,7 @@ const AddBlog = ({ setBlogs, blogs, toggleAddNoteref, setUser }) => {
                   required
                   minLength={5}
                   name="author"
+                  
                 />
               </Form.Group>
 

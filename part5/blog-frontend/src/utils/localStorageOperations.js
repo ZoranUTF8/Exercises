@@ -17,3 +17,5 @@ export const get_token_from_local_storage = () => {
   const token = result ? JSON.parse(result) : null;
   return token;
 };
+
+export default { add_user_to_local_storage, remove_user_from_local_storage };
