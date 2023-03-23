@@ -17,7 +17,6 @@ const DisplayNotes = () => {
     dispatch(toggleImportanceOf(id));
   };
 
-  console.log(notes);
   return (
     <ul>
       {notes.map((note) => (
