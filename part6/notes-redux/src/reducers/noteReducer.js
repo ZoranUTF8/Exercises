@@ -12,19 +12,13 @@ const initialState = [
     id: 2,
   },
 ];
-const generateId = () => Number((Math.random() * 1000000).toFixed(0));
 
 const noteSlice = createSlice({
   name: "notes",
   initialState: [],
   reducers: {
     createNote(state, action) {
-      const content = action.payload;
-      state.push({
-        content,
-        important: false,
-        id: generateId(),
-      });
+      state.push(action.payload);
     },
     toggleImportanceOf(state, action) {
       const id = action.payload.id;
@@ -39,7 +33,7 @@ const noteSlice = createSlice({
       state.push(action.payload);
     },
     setNotes(state, action) {
-      return state.concat(action.payload);
+      return action.payload;
     },
   },
 });
