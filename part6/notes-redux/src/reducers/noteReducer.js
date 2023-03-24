@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import noteService from "../services/notes";
 
 const initialState = [
   {
@@ -17,9 +18,6 @@ const noteSlice = createSlice({
   name: "notes",
   initialState: [],
   reducers: {
-    createNote(state, action) {
-      state.push(action.payload);
-    },
     toggleImportanceOf(state, action) {
       const id = action.payload.id;
       const noteToChange = state.find((n) => n.id === id);
@@ -37,36 +35,25 @@ const noteSlice = createSlice({
     },
   },
 });
+//?asynchronous action creators
+/*
+ first, an asynchronous operation is executed, 
+ after which the action changing the state of 
+ the store is dispatched.
+*/
+export const initializeNotes = () => {
+  return async (dispatch) => {
+    const notes = await noteService.getAll();
+    dispatch(setNotes(notes));
+  };
+};
 
-//? Old way and above is the redux toolkit way
-// const noteReducer = (state = initialState, action) => {
-//   console.log(state, action);
+export const createNote = (content) => {
+  return async (dispatch) => {
+    const newNote = await noteService.createNote(content);
+    dispatch(appendNote(newNote));
+  };
+};
 
-//   switch (action.type) {
-//     case "NEW_NOTE":
-//       return [...state, action.payload];
-//     case "TOGGLE_IMPORTANCE": {
-//       const id = action.payload.id;
-//       const noteToChange = state.find((n) => n.id === id);
-//       const changedNote = {
-//         ...noteToChange,
-//         important: !noteToChange.important,
-//       };
-//       return state.map((note) => (note.id !== id ? note : changedNote));
-//     }
-//     default:
-//       return state;
-//   }
-// };
-
-/*The createSlice function returns an object 
-containing the reducer as well as the action
-creators defined by the reducers parameter.
-The reducer can be accessed by the noteSlice.reducer
-property, whereas the action creators by the
-noteSlice.actions property. We can produce the file's
-exports in the following way */
-
-export const { setNotes, appendNote, createNote, toggleImportanceOf } =
-  noteSlice.actions;
+export const { setNotes, appendNote, toggleImportanceOf } = noteSlice.actions;
 export default noteSlice.reducer;

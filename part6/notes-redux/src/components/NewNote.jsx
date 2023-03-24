@@ -5,12 +5,11 @@ import noteServices from "../services/notes";
 const NewNote = () => {
   const dispatch = useDispatch(); //? dispatch function from the useDispatch hook.
 
-  const addNote = async (event) => {
+  const addNote = (event) => {
     event.preventDefault();
     const content = event.target.note.value;
     event.target.note.value = "";
-    const newNote = noteServices.createNote(content);
-    dispatch(createNote(newNote));
+    dispatch(createNote(content));
   };
 
   return (
