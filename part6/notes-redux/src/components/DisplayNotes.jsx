@@ -3,11 +3,12 @@ import Note from "./Note";
 import { toggleImportanceOf } from "../reducers/noteReducer";
 
 const DisplayNotes = () => {
-  const notes = useSelector(({ filter, notes }) => {
-    if (filter === "ALL") {
+  const notes = useSelector(({ filter: { filterOption }, notes }) => {
+
+    if (filterOption === "ALL") {
       return notes;
     }
-    return filter === "IMPORTANT"
+    return filterOption === "IMPORTANT"
       ? notes.filter((note) => note.important)
       : notes.filter((note) => !note.important);
   });
