@@ -35,7 +35,7 @@ const noteSlice = createSlice({
     },
   },
 });
-//?asynchronous action creators
+//? asynchronous action creators
 /*
  first, an asynchronous operation is executed, 
  after which the action changing the state of 
