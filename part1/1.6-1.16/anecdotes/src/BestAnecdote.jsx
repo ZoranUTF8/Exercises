@@ -1,7 +1,7 @@
 import React from "react";
 
 const BestAnecdote = ({ anecdotes }) => {
-  let BestUpvoteCount = 0;
+  const BestUpvoteCount = 0;
 
   const highestPoint = anecdotes.reduce(
     (prev, current) => {
