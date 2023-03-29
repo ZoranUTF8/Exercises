@@ -1,22 +1,16 @@
 {
 	"folders": [
 		{
-			"path": "../../../PhonebookFullstack"
-		},
-		{
 			"path": "../../../reactportfolio"
-		},
-		{
-			"path": "../../../trips"
-		},
-		{
-			"path": "../../../natours_API"
 		},
 		{
 			"path": "../.."
 		},
 		{
 			"path": "../../../react-bootstrap-website"
+		},
+		{
+			"path": "../../../meet_japan_backend"
 		}
 	],
 	"settings": {}
