@@ -11,6 +11,9 @@
 		},
 		{
 			"path": "../../../meet_japan_backend"
+		},
+		{
+			"path": "../../../complete-node-bootcamp"
 		}
 	],
 	"settings": {}
