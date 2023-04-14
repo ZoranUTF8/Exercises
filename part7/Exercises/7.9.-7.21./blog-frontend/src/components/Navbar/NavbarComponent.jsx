@@ -2,14 +2,16 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import * as localStorageOperations from "../../utils/localStorageOperations";
-import PropTypes from "prop-types";
 
-const NavbarComponent = ({ user, setUser }) => {
-  const handleLogout = () => {
-    localStorageOperations.remove_user_from_local_storage(user);
-    setUser(null);
-  };
+import { useSelector, useDispatch } from "react-redux";
+
+const NavbarComponent = () => {
+  const currentUser = useSelector((state) => state.currentUser);
+
+  // const handleLogout = () => {
+  //   localStorageOperations.remove_user_from_local_storage(user);
+  //   setUser(null);
+  // };
   return (
     <Navbar className="custom-navbar-color" expand="md">
       <Container fluid>
@@ -35,18 +37,14 @@ const NavbarComponent = ({ user, setUser }) => {
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>
-        {user && (
+        {currentUser && (
           <Nav>
-            <Nav.Link>Logged in as: {user.name}</Nav.Link>
-            <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
+            <Nav.Link>Logged in as: {currentUser.name}</Nav.Link>
+            {/* <Nav.Link onClick={handleLogout}>Logout</Nav.Link> */}
           </Nav>
         )}
       </Container>
     </Navbar>
   );
-};
-NavbarComponent.propTypes = {
-  user: PropTypes.oneOfType([PropTypes.object, PropTypes.oneOf([null])]),
-  setUser: PropTypes.func.isRequired,
 };
 export default NavbarComponent;

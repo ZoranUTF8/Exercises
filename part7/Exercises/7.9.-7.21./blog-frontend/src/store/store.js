@@ -5,6 +5,7 @@ import userReducer from "../reducers/userReducer";
 const store = configureStore({
   reducer: {
     blogs: blogsReducer,
+    user: userReducer,
   },
 });
 

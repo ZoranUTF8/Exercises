@@ -37,6 +37,7 @@ const getSingleBlogPost = async (req, res) => {
 //* Add new blog post
 const addNewBlogPost = async (req, res, next) => {
   const userObject = await User.findById(req.user.id);
+
   if (userObject) {
     const newBlogPost = await new Blog({
       title: req.body.title,
@@ -44,10 +45,11 @@ const addNewBlogPost = async (req, res, next) => {
       url: req.body.url,
       user: userObject.id,
     });
+
     const savedBlogPost = await newBlogPost.save();
     //? Add the blog id to the users notes array
     userObject.blogs = userObject.blogs.concat(savedBlogPost.id);
-
+    console.log("BLOG ADDED TO USER :", userObject);
     await userObject.save();
 
     res.status(201).json({

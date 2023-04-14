@@ -13,7 +13,7 @@ import {
 import { setToken } from "./services/BlogService";
 //* Reducer
 import { initializeBlogs } from "./reducers/blogsReducer";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import BlogService from "./services/BlogService";
 //* Bootstrap
@@ -23,6 +23,7 @@ import Col from "react-bootstrap/Col";
 import Stack from "react-bootstrap/Stack";
 
 const App = () => {
+  const { currentUser, isLoading } = useSelector((store) => store.user);
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
   const [registered, setRegistered] = useState(false);
@@ -31,9 +32,9 @@ const App = () => {
 
   //* Check if user logged in
   useEffect(() => {
+    console.log("here");
     const loggedInUserJSON =
       localStorageOperations.get_user_from_local_storage();
-
     if (loggedInUserJSON) {
       setUser(loggedInUserJSON);
       setToken(loggedInUserJSON.token);
@@ -51,7 +52,7 @@ const App = () => {
     <Container className="p-0" fluid>
       <NavbarComponent user={user} setUser={setUser} />
       <Row className="p-1 m-0 app-section">
-        {user === null && (
+        {currentUser === null && (
           <Col
             lg={3}
             md={6}
@@ -66,7 +67,7 @@ const App = () => {
             )}
           </Col>
         )}
-        {user !== null && (
+        {currentUser !== null && (
           <Col lg={12} className="mt-5">
             <Stack gap={3}>
               <Togglable buttonLabel="Add note" ref={toggleAddNoteref}>
@@ -76,7 +77,7 @@ const App = () => {
                   setUser={setUser}
                 />
               </Togglable>
-              <DisplayBlogs setBlogs={setBlogs} user={user} />
+              <DisplayBlogs setBlogs={setBlogs} user={currentUser} />
             </Stack>
           </Col>
         )}

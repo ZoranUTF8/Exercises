@@ -3,12 +3,19 @@ import { useState } from "react";
 import "./loginForm.css";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import * as LoginServices from "../../services/LoginService";
 import * as localStorageOperations from "../../utils/localStorageOperations";
 import { toast } from "react-toastify";
 import PropTypes from "prop-types";
+import { useSelector, useDispatch } from "react-redux";
+import { loginUser } from "../../reducers/userReducer";
+import Loading from "../Loading/Loading";
 
-const LoginForm = ({ setUser, setRegistered }) => {
+
+
+
+const LoginForm = ({ setRegistered }) => {
+  const dispatch = useDispatch();
+  const { currentUser, isLoading } = useSelector((store) => store.user);
   const [userData, setUserData] = useState({
     username: "",
     password: "",
@@ -18,10 +25,7 @@ const LoginForm = ({ setUser, setRegistered }) => {
     e.preventDefault();
 
     try {
-      const response = await LoginServices.loginUser(userData);
-      setUser(response);
-      localStorageOperations.add_user_to_local_storage(response);
-      toast.success("Successfully logged in.");
+      dispatch(loginUser(userData));
     } catch (error) {
       toast.error(error.response.data.msg);
     }
@@ -39,7 +43,7 @@ const LoginForm = ({ setUser, setRegistered }) => {
       className="content mx-auto login-form_container text-center"
       onSubmit={handleSubmit}
     >
-      <Form.Group className="mb-3" controlId="formBasicEmail">
+      <Form.Group className="mb-3">
         <Form.Label>Username</Form.Label>
         <Form.Control
           id="login-username"
@@ -51,7 +55,7 @@ const LoginForm = ({ setUser, setRegistered }) => {
         />
       </Form.Group>
 
-      <Form.Group className="mb-3" controlId="formBasicPassword">
+      <Form.Group className="mb-3">
         <Form.Label>Password</Form.Label>
         <Form.Control
           id="login-password"
@@ -76,7 +80,6 @@ const LoginForm = ({ setUser, setRegistered }) => {
 };
 
 LoginForm.propTypes = {
-  setUser: PropTypes.func.isRequired,
   setRegistered: PropTypes.func.isRequired,
 };
 

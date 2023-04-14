@@ -15,7 +15,12 @@ const Blog = ({ blog, indx, setBlogs, blogs, user }) => {
   const toggleModal = () => setShowModal((prevValue) => !prevValue);
 
   const updateLikeCount = async () => {
-    dispatch(updateBlogLike({ ...blog }));
+    if (userIsBlogOwner(user)) {
+      console.log("owner");
+      return toast.error("You cannot like your own blog.");
+    } else {
+      dispatch(updateBlogLike({ ...blog }));
+    }
   };
 
   const deleteSingleBlog = async () => {
@@ -34,59 +39,53 @@ const Blog = ({ blog, indx, setBlogs, blogs, user }) => {
     return user.blogs.includes(blog.id);
   };
 
-  return (
-    <>
-      <Accordion.Item eventKey={indx}>
-        <Accordion.Header>
-          {indx + 1}: {blog.title} by: {blog.author}
-        </Accordion.Header>
-        <Accordion.Body>
-          <p>Author: {blog.author} </p>
-          <br />
-          <p>
-            Url:
-            <a href={blog.url} target="_blank" rel="noreferrer">
-              {blog.url}
-            </a>
-          </p>
-          <br />
-          <p id="single_blog_like_count">Likes: {blog.likes} </p>
-          <Button
-            id="single_blog_like_btn"
-            variant="primary"
-            size="sm"
-            onClick={updateLikeCount}
-          >
-            Like
-          </Button>
-          <Button
-            id="single_blog_delete_btn"
-            variant="primary"
-            size="sm"
-            onClick={toggleModal}
-            className="ms-2"
-            disabled={!userIsBlogOwner(user)}
-          >
-            Delete
-          </Button>
-        </Accordion.Body>
-      </Accordion.Item>
-      {showModal && (
-        <YesNoModal
-          showModal={showModal}
-          toggleModal={toggleModal}
-          handleYes={deleteSingleBlog}
-          modalMessage={`Are you sure you want to delete ${blog.title} by ${blog.author}`}
-        />
-      )}
-    </>
-  );
-};
-Blog.propTypes = {
-  blog: PropTypes.object.isRequired,
-  indx: PropTypes.number.isRequired,
-  setBlogs: PropTypes.func.isRequired,
-  blogs: PropTypes.array.isRequired,
+  // return (
+  //   <>
+  //     <Accordion.Item eventKey={indx}>
+  //       <Accordion.Header>
+  //         {indx + 1}: {blog.title} by: {blog.author}
+  //       </Accordion.Header>
+  //       <Accordion.Body>
+  //         <p>Author: {blog.author} </p>
+  //         <br />
+  //         <p>
+  //           Url:
+  //           <a href={blog.url} target="_blank" rel="noreferrer">
+  //             {blog.url}
+  //           </a>
+  //         </p>
+  //         <br />
+  //         <p id="single_blog_like_count">Likes: {blog.likes} </p>
+  //         <Button
+  //           id="single_blog_like_btn"
+  //           variant="primary"
+  //           size="sm"
+  //           onClick={updateLikeCount}
+  //         >
+  //           Like
+  //         </Button>
+  //         <Button
+  //           id="single_blog_delete_btn"
+  //           variant="primary"
+  //           size="sm"
+  //           onClick={toggleModal}
+  //           className="ms-2"
+  //           disabled={!userIsBlogOwner(user)}
+  //         >
+  //           Delete
+  //         </Button>
+  //       </Accordion.Body>
+  //     </Accordion.Item>
+  //     {showModal && (
+  //       <YesNoModal
+  //         showModal={showModal}
+  //         toggleModal={toggleModal}
+  //         handleYes={deleteSingleBlog}
+  //         modalMessage={`Are you sure you want to delete ${blog.title} by ${blog.author}`}
+  //       />
+  //     )}
+  //   </>
+  // );
 };
 
 export default Blog;

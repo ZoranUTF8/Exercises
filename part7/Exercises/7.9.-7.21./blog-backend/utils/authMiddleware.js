@@ -14,7 +14,7 @@ const authenticateUserRequest = async (req, res, next) => {
   const decodedToken = await jwt.verify(token, process.env.JWT_KEY);
 
   const user = await User.findById(decodedToken.id);
-
+  // console.log("USER IN AUTH: ", user);
   if (!user) {
     return next(
       new CustomAPIError(

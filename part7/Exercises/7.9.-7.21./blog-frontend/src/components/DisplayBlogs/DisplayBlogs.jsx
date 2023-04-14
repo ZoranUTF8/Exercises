@@ -13,7 +13,7 @@ const DisplayBlogs = ({ setBlogs, user }) => {
       </div>
       <div>
         <div className="all-blogs">
-          <Accordion defaultActiveKey="0">
+          {/* <Accordion defaultActiveKey="0"> */}
             {[...blogs]
               .sort((a, b) => {
                 return b.likes - a.likes;
@@ -28,7 +28,7 @@ const DisplayBlogs = ({ setBlogs, user }) => {
                   user={user}
                 />
               ))}
-          </Accordion>
+          {/* </Accordion> */}
         </div>
       </div>
     </div>

@@ -24,7 +24,7 @@ const errorHandlerMiddleware = (err, req, res, next) => {
     msg: err.message || "Something went wrong.",
   };
 
-  logger.error(err);
+  logger.error("THIS ERROR OCCURED IN THE BACKEND: ", err);
 
   //  Cast error
   if (err.name === MONGOOSE_CAST_ERROR) {

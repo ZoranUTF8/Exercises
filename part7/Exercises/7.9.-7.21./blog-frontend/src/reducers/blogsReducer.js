@@ -29,7 +29,6 @@ const blogSlice = createSlice({
 export const initializeBlogs = () => {
   return async (dispatch) => {
     const blogs = await BlogService.getAll();
-
     dispatch(setBlogs(blogs));
   };
 };
@@ -42,9 +41,9 @@ export const createBlog = (blog) => {
 };
 
 export const updateBlogLike = (currentBlog) => {
-  
-  return async (dispatch, getState) => {
+  return async (dispatch) => {
     const updatedBlog = await BlogService.updateBlogLikeCount(currentBlog);
+
     dispatch(updateBlog(updatedBlog));
   };
 };
