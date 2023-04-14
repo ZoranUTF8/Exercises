@@ -1,9 +1,12 @@
 import React from "react";
 import Blog from "../Blog/Blog";
 import Accordion from "react-bootstrap/Accordion";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
-const DisplayBlogs = ({ setBlogs, user }) => {
+const DisplayBlogs = ({ setBlogs }) => {
+  const dispatch = useDispatch();
+  const { currentUser } = useSelector((store) => store.user);
+
   const blogs = useSelector((state) => state.blogs);
 
   return (
@@ -13,7 +16,7 @@ const DisplayBlogs = ({ setBlogs, user }) => {
       </div>
       <div>
         <div className="all-blogs">
-          {/* <Accordion defaultActiveKey="0"> */}
+          <Accordion defaultActiveKey="0">
             {[...blogs]
               .sort((a, b) => {
                 return b.likes - a.likes;
@@ -25,10 +28,9 @@ const DisplayBlogs = ({ setBlogs, user }) => {
                   indx={indx}
                   setBlogs={setBlogs}
                   blogs={blogs}
-                  user={user}
                 />
               ))}
-          {/* </Accordion> */}
+          </Accordion>
         </div>
       </div>
     </div>

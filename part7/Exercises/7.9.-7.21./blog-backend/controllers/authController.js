@@ -11,9 +11,10 @@ const {
 //! JWT should be stored in a secure only http cookie that We add later
 const createUserTokenAndSendResponse = async (res, user) => {
   // const expiryDate = new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_IN);
-  const receivedUser = { ...user._doc };
+  // const receivedUser = { ...user._doc };
+
   //? Remove password from output before we send the user back
-  receivedUser.passwordHash = undefined;
+  user.passwordHash = undefined;
   // const cookieOptions = {
   //   expires: expiryDate,
   //   httpOnly: true,
@@ -23,12 +24,14 @@ const createUserTokenAndSendResponse = async (res, user) => {
 
   //? If the user has the correct password then return the user data with a new jwt token
   const token = await user.generateToken();
-  receivedUser.token = token;
+
   // res.cookie("JWT_STORAGE", token, cookieOptions);
 
+  // console.log("receivedUser", receivedUser);
   return res.status(STATUS_CODES.OK).json({
     status: "success",
-    data: receivedUser,
+    user: user,
+    token: token,
   });
 };
 
@@ -39,7 +42,6 @@ const login = async (req, res, next) => {
 
   const passwordCorrect =
     user === null ? false : await bcrypt.compare(password, user.passwordHash);
-
 
   if (!(user && passwordCorrect)) {
     return next(new WrongCredentialsError("Invalid credentials"));

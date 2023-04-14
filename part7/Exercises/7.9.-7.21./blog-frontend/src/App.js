@@ -1,6 +1,8 @@
 import "./App.css";
 import { useState, useEffect, useRef } from "react";
 import * as localStorageOperations from "./utils/localStorageOperations";
+import { setUser } from "./reducers/userReducer";
+
 //* App imports
 import {
   DisplayBlogs,
@@ -23,8 +25,8 @@ import Col from "react-bootstrap/Col";
 import Stack from "react-bootstrap/Stack";
 
 const App = () => {
-  const { currentUser, isLoading } = useSelector((store) => store.user);
-  const [blogs, setBlogs] = useState([]);
+  const { currentUser } = useSelector((store) => store.user);
+
   const [user, setUser] = useState(null);
   const [registered, setRegistered] = useState(false);
   const toggleAddNoteref = useRef();
@@ -32,15 +34,10 @@ const App = () => {
 
   //* Check if user logged in
   useEffect(() => {
-    console.log("here");
+    // ! ADD TOKEN TO LOCAL STORAGE AS NOW IT IT IS NOT IN THE USER ANYMORE
     const loggedInUserJSON =
       localStorageOperations.get_user_from_local_storage();
-    if (loggedInUserJSON) {
-      setUser(loggedInUserJSON);
-      setToken(loggedInUserJSON.token);
-    } else {
-      console.log("No logged in user");
-    }
+    if (loggedInUserJSON) setToken(loggedInUserJSON.token);
   }, []);
 
   //* Get all blogs on first render
@@ -63,7 +60,7 @@ const App = () => {
             {registered ? (
               <Register setUser={setUser} setRegistered={setRegistered} />
             ) : (
-              <LoginForm setUser={setUser} setRegistered={setRegistered} />
+              <LoginForm setRegistered={setRegistered} />
             )}
           </Col>
         )}
@@ -71,13 +68,9 @@ const App = () => {
           <Col lg={12} className="mt-5">
             <Stack gap={3}>
               <Togglable buttonLabel="Add note" ref={toggleAddNoteref}>
-                <AddBlog
-                  setBlogs={setBlogs}
-                  toggleAddNoteref={toggleAddNoteref}
-                  setUser={setUser}
-                />
+                <AddBlog toggleAddNoteref={toggleAddNoteref} />
               </Togglable>
-              <DisplayBlogs setBlogs={setBlogs} user={currentUser} />
+              <DisplayBlogs />
             </Stack>
           </Col>
         )}

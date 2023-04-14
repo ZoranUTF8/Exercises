@@ -33,10 +33,11 @@ const AddBlog = ({ toggleAddNoteref }) => {
     //   blogs: [...prevUser.blogs, response.data.id],
     // }));
 
-    setNewBlog({ title: "", author: "", url: "" });
-    // toast.success(
+     // toast.success(
     //   `A new blog ${response.data.title} ! By ${response.data.author} added.`
     // );
+    setNewBlog({ title: "", author: "", url: "" });
+   
     toggleAddNoteref.current.toggleVisibility();
   };
 

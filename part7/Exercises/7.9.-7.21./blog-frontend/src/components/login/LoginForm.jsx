@@ -10,12 +10,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { loginUser } from "../../reducers/userReducer";
 import Loading from "../Loading/Loading";
 
-
-
-
 const LoginForm = ({ setRegistered }) => {
   const dispatch = useDispatch();
-  const { currentUser, isLoading } = useSelector((store) => store.user);
   const [userData, setUserData] = useState({
     username: "",
     password: "",
@@ -26,6 +22,7 @@ const LoginForm = ({ setRegistered }) => {
 
     try {
       dispatch(loginUser(userData));
+      
     } catch (error) {
       toast.error(error.response.data.msg);
     }
