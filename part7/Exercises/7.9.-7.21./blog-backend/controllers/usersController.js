@@ -45,9 +45,7 @@ const getAllUsers = async (req, res) => {
     url: 1,
   });
 
-  console.log(allUsers);
-
-  res.status(200).json({ message: "Success", data: allUsers });
+  res.status(200).json({ message: "Success", allUsers });
 };
 
 module.exports = { addNewUser, getAllUsers };

@@ -43,7 +43,7 @@ mongoose
 app.use(cors());
 app.use(express.json());
 
-// ! If needed later when we add the fronend to the backedn
+// ! If needed later when we add the frontend to the backendn
 //! app.use(express.static("build"));
 app.use("/api/blogs", blogRouter);
 app.use("/api/users", usersRouter);

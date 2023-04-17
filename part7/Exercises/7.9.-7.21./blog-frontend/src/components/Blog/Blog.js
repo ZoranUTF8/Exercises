@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { updateBlogLike, deleteBlogPost } from "../../reducers/blogsReducer";
 import { useSelector, useDispatch } from "react-redux";
 
-const Blog = ({ blog, indx, setBlogs, blogs }) => {
+const Blog = ({ blog, indx, blogs }) => {
   const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false);
   const { currentUser } = useSelector((store) => store.user);
@@ -28,7 +28,6 @@ const Blog = ({ blog, indx, setBlogs, blogs }) => {
   };
 
   const userIsBlogOwner = (currentUser) => {
-    console.log(blog.user, currentUser.id);
     return blog.user === currentUser.id;
   };
 

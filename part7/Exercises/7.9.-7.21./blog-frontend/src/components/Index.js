@@ -6,6 +6,9 @@ import AddBlog from "./AddBlog/AddBlog";
 import Togglable from "./Togglable/Togglable";
 import Register from "./Register/Register";
 import YesNoModal from "./Modal/YesNoModal";
+import SingleUser from "./SingleUser/SingleUser";
+import AllUsers from "./AllUsers/AllUsers";
+import ProtectedRoute from "./ProtectedRoute/ProtectedRoute";
 export {
   Blog,
   LoginForm,
@@ -15,4 +18,7 @@ export {
   Togglable,
   Register,
   YesNoModal,
+  SingleUser,
+  AllUsers,
+  ProtectedRoute,
 };

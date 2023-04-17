@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import PropTypes from "prop-types";
 
 const initialState = { username: "", name: "", password: "" };
-const Register = ({ setUser, setRegistered }) => {
+const Register = ({ setRegistered }) => {
   const [newUser, setNewUser] = useState(initialState);
   const [termsAccepted, setTermsAccepted] = useState(false);
 
@@ -27,7 +27,7 @@ const Register = ({ setUser, setRegistered }) => {
 
     try {
       const response = await RegisterService.registerUser(newUser);
-      setUser(response.data);
+
       localStorageOperations.add_user_to_local_storage(response.data);
       toast.success("You successfully registered.");
       setNewUser(initialState);

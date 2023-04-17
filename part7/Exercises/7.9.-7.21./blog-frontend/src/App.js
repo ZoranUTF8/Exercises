@@ -1,8 +1,8 @@
 import "./App.css";
 import { useState, useEffect, useRef } from "react";
 import * as localStorageOperations from "./utils/localStorageOperations";
-import { setUser } from "./reducers/userReducer";
 
+import { Routes, Route } from "react-router-dom";
 //* App imports
 import {
   DisplayBlogs,
@@ -11,33 +11,29 @@ import {
   AddBlog,
   Togglable,
   Register,
+  SingleUser,
+  AllUsers,
+  ProtectedRoute,
 } from "./components/Index";
 import { setToken } from "./services/BlogService";
 //* Reducer
 import { initializeBlogs } from "./reducers/blogsReducer";
-import { useSelector, useDispatch } from "react-redux";
+import {  useDispatch } from "react-redux";
 
-import BlogService from "./services/BlogService";
 //* Bootstrap
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Stack from "react-bootstrap/Stack";
 
 const App = () => {
-  const { currentUser } = useSelector((store) => store.user);
-
-  const [user, setUser] = useState(null);
-  const [registered, setRegistered] = useState(false);
   const toggleAddNoteref = useRef();
   const dispatch = useDispatch();
 
   //* Check if user logged in
   useEffect(() => {
-    // ! ADD TOKEN TO LOCAL STORAGE AS NOW IT IT IS NOT IN THE USER ANYMORE
-    const loggedInUserJSON =
-      localStorageOperations.get_user_from_local_storage();
-    if (loggedInUserJSON) setToken(loggedInUserJSON.token);
+    const loggedInUserJSONToken =
+      localStorageOperations.get_token_from_local_storage();
+    if (loggedInUserJSONToken) setToken(loggedInUserJSONToken);
   }, []);
 
   //* Get all blogs on first render
@@ -47,33 +43,36 @@ const App = () => {
 
   return (
     <Container className="p-0" fluid>
-      <NavbarComponent user={user} setUser={setUser} />
-      <Row className="p-1 m-0 app-section">
-        {currentUser === null && (
-          <Col
-            lg={3}
-            md={6}
-            sm={6}
-            xs={12}
-            className="d-flex flex-column justify-content-center w-100"
-          >
-            {registered ? (
-              <Register setUser={setUser} setRegistered={setRegistered} />
-            ) : (
-              <LoginForm setRegistered={setRegistered} />
-            )}
-          </Col>
-        )}
-        {currentUser !== null && (
-          <Col lg={12} className="mt-5">
-            <Stack gap={3}>
-              <Togglable buttonLabel="Add note" ref={toggleAddNoteref}>
-                <AddBlog toggleAddNoteref={toggleAddNoteref} />
-              </Togglable>
-              <DisplayBlogs />
-            </Stack>
-          </Col>
-        )}
+      <Row>
+        <Col>
+          <NavbarComponent />
+
+          <Routes>
+            <Route path="app" element={<ProtectedRoute />}>
+              <Route
+                index
+                element={
+                  <>
+                    <Togglable buttonLabel="Add note" ref={toggleAddNoteref}>
+                      <AddBlog toggleAddNoteref={toggleAddNoteref} />
+                    </Togglable>
+                    <DisplayBlogs />
+                  </>
+                }
+              />
+
+              <Route path="allusers" element={<AllUsers />} />
+              <Route path="users/:id" element={<SingleUser />} />
+            </Route>
+
+            <Route path="login" element={<LoginForm />} />
+
+            <Route
+              path="*"
+              element={<h1 className="text-primary">No such page</h1>}
+            />
+          </Routes>
+        </Col>
       </Row>
     </Container>
   );

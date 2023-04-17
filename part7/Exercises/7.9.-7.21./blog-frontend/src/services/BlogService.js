@@ -4,7 +4,6 @@ const baseUrl = "http://localhost:3001/api/blogs";
 let token = null;
 
 const setToken = (newToken) => {
-  console.log("token set", newToken);
   token = `Bearer ${newToken}`;
   config.headers.Authorization = token;
 };
@@ -19,7 +18,6 @@ const getAll = async () => {
 };
 
 const addNewBlog = async (newBlog) => {
-  console.log("config :", config);
 
   const response = await axios.post(baseUrl, newBlog, config);
   return response.data;

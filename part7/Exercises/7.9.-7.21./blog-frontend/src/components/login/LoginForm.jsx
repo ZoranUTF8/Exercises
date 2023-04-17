@@ -8,10 +8,13 @@ import { toast } from "react-toastify";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { loginUser } from "../../reducers/userReducer";
-import Loading from "../Loading/Loading";
+import { useNavigate } from "react-router-dom";
+
 
 const LoginForm = ({ setRegistered }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [userData, setUserData] = useState({
     username: "",
     password: "",
@@ -21,8 +24,7 @@ const LoginForm = ({ setRegistered }) => {
     e.preventDefault();
 
     try {
-      dispatch(loginUser(userData));
-      
+      dispatch(loginUser(userData,navigate));
     } catch (error) {
       toast.error(error.response.data.msg);
     }
@@ -74,10 +76,6 @@ const LoginForm = ({ setRegistered }) => {
       </Button>
     </Form>
   );
-};
-
-LoginForm.propTypes = {
-  setRegistered: PropTypes.func.isRequired,
 };
 
 export default LoginForm;
