@@ -1,6 +1,5 @@
 import axios from "axios";
 const baseUrl = "http://localhost:3001/api/blogs";
-
 let token = null;
 
 const setToken = (newToken) => {
@@ -18,7 +17,6 @@ const getAll = async () => {
 };
 
 const addNewBlog = async (newBlog) => {
-
   const response = await axios.post(baseUrl, newBlog, config);
   return response.data;
 };
@@ -45,6 +43,21 @@ const deleteBlogPost = async (blogId) => {
   const response = await axios.delete(`${baseUrl}/${blogId}`, config);
   return response.data;
 };
+
+const addCommentToBlog = async (blogId, commentText) => {
+  const response = await axios.post(
+    `${baseUrl}/${blogId}/comments`,
+    { commentText },
+    config
+  );
+  return response.data;
+};
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getAll, addNewBlog, updateBlogLikeCount, deleteBlogPost };
+export default {
+  getAll,
+  addNewBlog,
+  updateBlogLikeCount,
+  deleteBlogPost,
+  addCommentToBlog,
+};
 export { setToken };

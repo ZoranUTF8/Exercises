@@ -9,6 +9,8 @@ import YesNoModal from "./Modal/YesNoModal";
 import SingleUser from "./SingleUser/SingleUser";
 import AllUsers from "./AllUsers/AllUsers";
 import ProtectedRoute from "./ProtectedRoute/ProtectedRoute";
+import SingleBlogView from "./SingleBlogView/SingleBlogView";
+
 export {
   Blog,
   LoginForm,
@@ -21,4 +23,5 @@ export {
   SingleUser,
   AllUsers,
   ProtectedRoute,
+  SingleBlogView
 };

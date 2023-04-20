@@ -14,11 +14,12 @@ import {
   SingleUser,
   AllUsers,
   ProtectedRoute,
+  SingleBlogView,
 } from "./components/Index";
 import { setToken } from "./services/BlogService";
 //* Reducer
 import { initializeBlogs } from "./reducers/blogsReducer";
-import {  useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
 //* Bootstrap
 import Container from "react-bootstrap/Container";
@@ -63,6 +64,7 @@ const App = () => {
 
               <Route path="allusers" element={<AllUsers />} />
               <Route path="users/:id" element={<SingleUser />} />
+              <Route path="blog/:id" element={<SingleBlogView />} />
             </Route>
 
             <Route path="login" element={<LoginForm />} />

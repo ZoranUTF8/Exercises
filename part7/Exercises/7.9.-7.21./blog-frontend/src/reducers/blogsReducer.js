@@ -45,8 +45,29 @@ export const createBlog = (blog) => {
 
 export const updateBlogLike = (currentBlog) => {
   return async (dispatch) => {
-    const updatedBlog = await BlogService.updateBlogLikeCount(currentBlog);
-    dispatch(updateBlog(updatedBlog));
+    try {
+      const updatedBlog = await BlogService.updateBlogLikeCount(currentBlog);
+      console.log("updatedBlog", updatedBlog);
+      dispatch(updateBlog(updatedBlog));
+    } catch (err) {
+      toast.error(err.response.data.msg);
+    }
+  };
+};
+
+export const addBlogComment = (blogId, commentText) => {
+  return async (dispatch) => {
+    try {
+      const updatedBlogPost = await BlogService.addCommentToBlog(
+        blogId,
+        commentText
+      );
+      console.log("updatedBlogPost in the front", updatedBlogPost);
+      dispatch(updateBlog(updatedBlogPost.blogPost));
+    } catch (error) {
+      console.log("error in front: ", error);
+      toast.error(error.response.data.msg);
+    }
   };
 };
 
@@ -57,7 +78,6 @@ export const deleteBlogPost = (blogId) => {
       dispatch(initializeBlogs());
       toast.success(deletedBlogResponse.message);
     } catch (err) {
-      console.log(err);
       toast.error(`Error deleting blog post.`);
     }
   };

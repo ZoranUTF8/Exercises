@@ -5,8 +5,9 @@ import YesNoModal from "../Modal/YesNoModal";
 import { toast } from "react-toastify";
 import { updateBlogLike, deleteBlogPost } from "../../reducers/blogsReducer";
 import { useSelector, useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 
-const Blog = ({ blog, indx, blogs }) => {
+const Blog = ({ blog, indx }) => {
   const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false);
   const { currentUser } = useSelector((store) => store.user);
@@ -34,8 +35,10 @@ const Blog = ({ blog, indx, blogs }) => {
   return (
     <>
       <Accordion.Item eventKey={indx}>
-        <Accordion.Header>
-          {indx + 1}: {blog.title} by: {blog.author}
+        <Accordion.Header className="text-center">
+          <Link to={`/app/blog/${blog.id}`}>
+            {indx + 1}: {blog.title} by: {blog.author}
+          </Link>
         </Accordion.Header>
         <Accordion.Body>
           <p>Author: {blog.author} </p>

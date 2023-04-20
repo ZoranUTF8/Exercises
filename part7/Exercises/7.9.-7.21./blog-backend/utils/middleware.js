@@ -57,6 +57,7 @@ const errorHandlerMiddleware = (err, req, res, next) => {
 
 //! Unknown endpoint
 const unknownEndpoint = (request, response) => {
+  console.log(request);
   response.status(404).json({ error: "Unknown endpoint" });
 };
 

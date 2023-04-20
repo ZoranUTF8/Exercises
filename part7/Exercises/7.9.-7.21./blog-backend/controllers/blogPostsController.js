@@ -1,15 +1,21 @@
 const Blog = require("../models/blog");
 const User = require("../models/user");
+const Comment = require("../models/comment");
 const { CustomAPIError } = require("../utils/customErrors/index");
 const { StatusCodes } = require("http-status-codes");
 
 //* Get all blog post
 
 const getAllBlogPosts = async (req, res, next) => {
-  const blogsPosts = await Blog.find({}).populate("user", {
-    username: 1,
-    name: 1,
-  });
+  const blogsPosts = await Blog.find({})
+    .populate("user", {
+      username: 1,
+      name: 1,
+    })
+    .populate({
+      path: "comments",
+      select: "commentText _id createdAt updatedAt",
+    });
   res.json(blogsPosts);
 };
 
@@ -100,13 +106,14 @@ const deleteSingleBlogPost = async (req, res, next) => {
 //? Add the user id who liked the post.
 
 const updateSingleBlogPost = async (req, res, next) => {
-  const { author, likes, title, url } = req.body;
+  const { author, likes, title, url, comments } = req.body;
 
   const newBlogPost = {
     title,
     likes,
     author,
     url,
+    comments,
   };
 
   const updatedBlogPost = await Blog.findByIdAndUpdate(
@@ -117,7 +124,10 @@ const updateSingleBlogPost = async (req, res, next) => {
       runValidators: true,
       context: "query",
     }
-  );
+  ).populate({
+    path: "comments",
+    select: "commentText _id createdAt updatedAt",
+  });
 
   if (updatedBlogPost) {
     res.status(200).json({ status: "success", data: updatedBlogPost });
@@ -128,10 +138,51 @@ const updateSingleBlogPost = async (req, res, next) => {
   }
 };
 
+//* Add comment to a blog post
+const addBlogComment = async (req, res, next) => {
+  //  Find the blog to which the comment is meant for
+  const blogPostToAddCommentTo = await Blog.findById(req.params.id);
+
+  // If blog exists
+  if (blogPostToAddCommentTo) {
+    // Create a new comment and save
+    const newComment = await new Comment({ commentText: req.body.commentText });
+    const savedComment = await newComment.save();
+    // add the comment id to the blog comments array
+    const updatedBlogPost = await Blog.findByIdAndUpdate(
+      req.params.id,
+      { $push: { comments: savedComment._id } },
+      {
+        new: true,
+        runValidators: true,
+        context: "query",
+      }
+    ).populate({
+      path: "comments",
+      select: "commentText _id createdAt updatedAt",
+    });
+
+    res.status(StatusCodes.OK).json({
+      message: `Comment added successfully.`,
+      blogPost: updatedBlogPost,
+    });
+  } else {
+    return next(
+      new CustomAPIError(
+        `No such blog post with id ${req.params.id}`,
+        StatusCodes.NOT_FOUND
+      )
+    );
+  }
+};
+
+//* Delete comment from a blog post
+
 module.exports = {
   deleteSingleBlogPost,
   getSingleBlogPost,
   getAllBlogPosts,
   addNewBlogPost,
   updateSingleBlogPost,
+  addBlogComment,
 };

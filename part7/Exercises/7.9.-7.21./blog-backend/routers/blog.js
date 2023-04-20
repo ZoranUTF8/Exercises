@@ -8,6 +8,7 @@ const {
   addNewBlogPost,
   deleteSingleBlogPost,
   updateSingleBlogPost,
+  addBlogComment,
 } = require("../controllers/blogPostsController");
 
 router
@@ -19,4 +20,6 @@ router
   .get(getSingleBlogPost)
   .delete(authenticateUserRequest, deleteSingleBlogPost)
   .put(authenticateUserRequest, updateSingleBlogPost);
+
+router.route("/:id/comments").post(addBlogComment);
 module.exports = router;

@@ -3,13 +3,10 @@ import { useState } from "react";
 import "./loginForm.css";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import * as localStorageOperations from "../../utils/localStorageOperations";
 import { toast } from "react-toastify";
-import PropTypes from "prop-types";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { loginUser } from "../../reducers/userReducer";
 import { useNavigate } from "react-router-dom";
-
 
 const LoginForm = ({ setRegistered }) => {
   const dispatch = useDispatch();
@@ -24,7 +21,7 @@ const LoginForm = ({ setRegistered }) => {
     e.preventDefault();
 
     try {
-      dispatch(loginUser(userData,navigate));
+      dispatch(loginUser(userData, navigate));
     } catch (error) {
       toast.error(error.response.data.msg);
     }

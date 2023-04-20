@@ -16,10 +16,10 @@
 			"path": "../../../complete-node-bootcamp"
 		},
 		{
-			"path": "../../../../assignment-webdev-zoranjanjic-20230412"
+			"path": "../../../separation_of_concerns"
 		},
 		{
-			"path": "../../../separation_of_concerns"
+			"path": "../../../react_design_patterns"
 		}
 	],
 	"settings": {}

@@ -75,7 +75,7 @@ export const loginUser = (userCredentials, navigate) => {
         toast.success(`Welcome back ${response.user.name}.`);
         dispatch(setUser(response));
         setToken(response.token);
-        navigate("/"); // redirect to the home page after login
+        navigate("/app"); // redirect to the home page after login
       }
     } catch (err) {
       console.log(err);
