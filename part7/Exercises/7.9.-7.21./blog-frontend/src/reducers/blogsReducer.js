@@ -62,7 +62,6 @@ export const addBlogComment = (blogId, commentText) => {
         blogId,
         commentText
       );
-      console.log("updatedBlogPost in the front", updatedBlogPost);
       dispatch(updateBlog(updatedBlogPost.blogPost));
     } catch (error) {
       console.log("error in front: ", error);
