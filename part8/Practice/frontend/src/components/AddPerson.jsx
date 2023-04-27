@@ -1,27 +1,10 @@
 import { useState } from "react";
-import { gql, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
+import queries from "../queries/queries";
 
 import { Container, TextField, Button } from "@mui/material";
 
-const CREATE_PERSON = gql`
-  mutation createPerson(
-    $name: String!
-    $street: String!
-    $city: String!
-    $phone: String
-  ) {
-    addPerson(name: $name, street: $street, city: $city, phone: $phone) {
-      name
-      phone
-      id
-      address {
-        street
-        city
-      }
-    }
-  }
-`;
-const AddPerson = () => {
+const AddPerson = ({ setError }) => {
   const [personData, setPersonData] = useState({
     name: "",
     phone: "",
@@ -37,7 +20,12 @@ const AddPerson = () => {
     });
   };
 
-  const [createPerson] = useMutation(CREATE_PERSON);
+  const [createPerson] = useMutation(queries.CREATE_PERSON, {
+    refetchQueries: [{ query: queries.ALL_PERSONS }],
+    onError: (error) => {
+      setError(error.graphQLErrors[0].message);
+    },
+  });
 
   const submit = (event) => {
     event.preventDefault();
@@ -63,6 +51,7 @@ const AddPerson = () => {
             variant="outlined"
             size="small"
             name="name"
+            required
             value={personData.name}
             onChange={(e) => {
               onValueChange(e);
@@ -74,6 +63,7 @@ const AddPerson = () => {
             label="Phone Number"
             variant="outlined"
             size="small"
+            required
             name="phone"
             value={personData.phone}
             onChange={(e) => {
@@ -87,6 +77,7 @@ const AddPerson = () => {
             variant="outlined"
             size="small"
             name="street"
+            required
             value={personData.street}
             onChange={(e) => {
               onValueChange(e);
@@ -98,6 +89,7 @@ const AddPerson = () => {
             label="City"
             variant="outlined"
             size="small"
+            required
             name="city"
             value={personData.city}
             onChange={(e) => {

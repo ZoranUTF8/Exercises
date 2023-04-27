@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { gql, useQuery } from "@apollo/client"; // ? The useQuery hook is well-suited for situations where the query is done when the component is rendered.
+import { useQuery } from "@apollo/client"; // ? The useQuery hook is well-suited for situations where the query is done when the component is rendered.
 import {
   Table,
   TableBody,
@@ -13,38 +13,18 @@ import {
 } from "@mui/material";
 import SinglePerson from "./SinglePerson";
 import AddPerson from "./AddPerson";
-
-const ALL_PERSONS = gql`
-  query {
-    allPersons {
-      name
-      phone
-      id
-    }
-  }
-`;
-
-const FIND_PERSON = gql`
-  query findPersonByName($nameToSearch: String!) {
-    findPerson(name: $nameToSearch) {
-      name
-      phone
-      id
-      address {
-        street
-        city
-      }
-    }
-  }
-`;
+import queries from "../queries/queries";
+import Notify from "./Notification";
+import UpdatePhone from "./UpdatePhone";
 
 const DisplayPersons = () => {
   const [persons, setPersons] = useState([]);
+  const [error, setError] = useState(null);
 
-  const result = useQuery(ALL_PERSONS);
+  const result = useQuery(queries.ALL_PERSONS);
 
   const [nameToSearch, setNameToSearch] = useState(null);
-  const nameSearchResult = useQuery(FIND_PERSON, {
+  const nameSearchResult = useQuery(queries.FIND_PERSON, {
     variables: { nameToSearch },
     skip: !nameToSearch,
   });
@@ -70,6 +50,7 @@ const DisplayPersons = () => {
 
   return (
     <Container style={{ textAlign: "center" }}>
+      <Notify errorMessage={error} setError={setError} />
       <TableContainer component={Paper} elevation={3}>
         <Table aria-label="simple table">
           <TableHead>
@@ -101,7 +82,8 @@ const DisplayPersons = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <AddPerson />
+      <AddPerson setError={setError} />
+      <UpdatePhone />
     </Container>
   );
 };
