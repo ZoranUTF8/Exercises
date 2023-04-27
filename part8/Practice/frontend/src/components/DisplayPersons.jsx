@@ -83,7 +83,7 @@ const DisplayPersons = () => {
         </Table>
       </TableContainer>
       <AddPerson setError={setError} />
-      <UpdatePhone />
+      <UpdatePhone setError={setError} />
     </Container>
   );
 };

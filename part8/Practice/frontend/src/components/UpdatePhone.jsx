@@ -1,14 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation } from "@apollo/client";
 import { TextField, Button, Container } from "@mui/material";
 
 import queries from "../queries/queries";
 
-const UpdatePhone = () => {
+const UpdatePhone = ({ setError }) => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
 
-  const [changeNumber] = useMutation(queries.EDIT_NUMBER);
+  const [changeNumber, result] = useMutation(queries.EDIT_NUMBER);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -19,6 +19,13 @@ const UpdatePhone = () => {
     setPhone("");
   };
 
+  useEffect(() => {
+    if (result.data && result.data.editNumber === null) {
+      setError("Person not found");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [result.data]);
+
   return (
     <Container maxWidth="sm" sx={{ textAlign: "center" }}>
       <h2>Change Number</h2>
@@ -28,6 +35,7 @@ const UpdatePhone = () => {
           variant="outlined"
           margin="normal"
           fullWidth
+          required
           value={name}
           onChange={(event) => setName(event.target.value)}
         />
@@ -37,6 +45,7 @@ const UpdatePhone = () => {
           variant="outlined"
           margin="normal"
           fullWidth
+          required
           value={phone}
           onChange={(event) => setPhone(event.target.value)}
         />
