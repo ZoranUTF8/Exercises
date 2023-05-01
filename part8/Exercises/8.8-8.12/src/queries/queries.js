@@ -41,4 +41,14 @@ const CREATE_BOOK = gql`
     }
   }
 `;
-export default { ALL_AUTHORS, ALL_BOOKS, CREATE_BOOK };
+
+const UPDATE_AUTHOR_BORN = gql`
+  mutation updateAuthorBorn($name: String!, $born: Int!) {
+    editAuthor(name: $name, born: $born) {
+      name
+      born
+    }
+  }
+`;
+
+export default { ALL_AUTHORS, ALL_BOOKS, CREATE_BOOK, UPDATE_AUTHOR_BORN };

@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App";
 import { BrowserRouter as Router } from "react-router-dom";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import { ToastContainer } from "react-toastify";
 
 const client = new ApolloClient({
   uri: "http://localhost:4000",
@@ -16,6 +17,7 @@ root.render(
     <Router>
       <ApolloProvider client={client}>
         <App />
+        <ToastContainer />
       </ApolloProvider>
     </Router>
   </React.StrictMode>

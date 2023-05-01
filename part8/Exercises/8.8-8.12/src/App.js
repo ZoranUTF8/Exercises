@@ -1,3 +1,4 @@
+import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import { Routes, Route, Link } from "react-router-dom";
 import AllAuthors from "./components/AllAuthors";
@@ -5,6 +6,7 @@ import AllBooks from "./components/AllBooks";
 import Landing from "./components/Landing";
 import { Container } from "@mui/material";
 import AddBook from "./components/AddBook";
+import UpdateAuthor from "./components/UpdateAuthor";
 
 function App() {
   const padding = {
@@ -28,6 +30,9 @@ function App() {
           <Link style={padding} to="/add-book">
             Add book
           </Link>
+          <Link style={padding} to="/update-author">
+            Update author
+          </Link>
         </div>
 
         <Routes>
@@ -35,6 +40,7 @@ function App() {
           <Route path="/books" element={<AllBooks />} />
           <Route path="/home" element={<Landing />} />
           <Route path="/add-book" element={<AddBook />} />
+          <Route path="/update-author" element={<UpdateAuthor />} />
         </Routes>
       </Container>
       <footer>

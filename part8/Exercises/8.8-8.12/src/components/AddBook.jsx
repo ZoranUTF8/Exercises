@@ -12,7 +12,7 @@ import {
   MenuItem,
 } from "@mui/material";
 
-const AddBook = ({ setError }) => {
+const AddBook = () => {
   const genresList = [
     "Science Fiction",
     "Fantasy",
@@ -37,7 +37,7 @@ const AddBook = ({ setError }) => {
     if (name === "genres") {
       // If the input field being changed is genres, ensure value is a string before splitting
       const genresArray = value.toString().split(",");
-      console.log(genresArray);
+
       setBookData((prevValue) => {
         return { ...prevValue, [name]: genresArray };
       });
@@ -48,6 +48,7 @@ const AddBook = ({ setError }) => {
       });
     }
   };
+  
   const [createBook] = useMutation(queries.CREATE_BOOK, {
     refetchQueries: [{ query: queries.ALL_BOOKS }],
   });

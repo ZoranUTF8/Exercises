@@ -116,7 +116,10 @@ const typeDefs = `
       author: String!,
       genres: [String!]!
     ):Book
-    editAuthor(name:String!,birthYear:Int!):Author
+    editAuthor(
+      name:String!
+      born:Int!
+      ):Author
   }
 `;
 
@@ -175,24 +178,16 @@ const resolvers = {
       return book;
     },
     editAuthor: (root, args) => {
-      // check if author already exists in authors array
-      let existingAuthor = authors.find((a) => a.name === args.name);
-      console.log(authors);
-      if (!existingAuthor) {
-        throw new GraphQLError("No such author found.", {
-          extensions: {
-            code: "BAD_USER_INPUT",
-            invalidArgs: args.name,
-          },
-        });
+      const { name, born } = args;
+      const authorToEdit = authors.find((author) => author.name === name);
+      if (!authorToEdit) {
+        throw new GraphQLError("Author not found");
       }
-
-      const updatedAuthor = { ...existingAuthor, born: args.birthYear };
-
+      const editedAuthor = { ...authorToEdit, born };
       authors = authors.map((author) =>
-        author.name === args.name ? updatedAuthor : author
+        author.name === name ? editedAuthor : author
       );
-      return updatedAuthor;
+      return editedAuthor;
     },
   },
 };
@@ -267,6 +262,11 @@ query {
   }
 }
 
-
+update a author born year
+mutation {
+  editAuthor(name: "Arto Hellas", born: 1241) {
+    name
+    born  }
+}
 
 */
