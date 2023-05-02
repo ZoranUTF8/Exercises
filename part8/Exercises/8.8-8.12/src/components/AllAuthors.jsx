@@ -11,7 +11,6 @@ const AllAuthors = () => {
 
   useEffect(() => {
     if (result.data) {
-      console.log(result.data.allAuthors);
       setAllAuthors(result.data.allAuthors);
     }
   }, [result.data]);

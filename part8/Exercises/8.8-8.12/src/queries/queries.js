@@ -17,6 +17,7 @@ const ALL_BOOKS = gql`
       title
       author
       published
+      id
     }
   }
 `;

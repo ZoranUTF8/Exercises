@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 
 const TableDisplay = ({ dataToDisplay, type }) => {
-  console.log(dataToDisplay);
+
   return (
     <div>
       <TableContainer component={Paper} elevation={3}>
