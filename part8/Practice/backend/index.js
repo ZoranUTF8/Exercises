@@ -2,23 +2,10 @@ require("dotenv").config();
 const { ApolloServer } = require("@apollo/server");
 const { startStandaloneServer } = require("@apollo/server/standalone");
 const { GraphQLError } = require("graphql");
-
-const mongoose = require("mongoose");
-mongoose.set("strictQuery", false);
+const DBconnection = require("./server");
+const jwt = require("jsonwebtoken");
 const Person = require("./models/person");
-
-const MONGODB_URI = process.env.TEST_MONGODB_URI_GRAPHQL;
-
-console.log("connecting to", MONGODB_URI);
-
-mongoose
-  .connect(MONGODB_URI)
-  .then(() => {
-    console.log("connected to MongoDB");
-  })
-  .catch((error) => {
-    console.log("error connection to MongoDB:", error.message);
-  });
+const User = require("./models/user");
 
 const typeDefs = `
 
@@ -27,33 +14,64 @@ enum YesNo {
   NO
 }
 
-  type Address {
+type User {
+  username: String!
+  email:String!
+  friends: [Person!]!
+  id: ID!
+}
+
+type Token {
+  value: String!
+}
+
+type Address {
     street: String!
     city: String! 
   }
-  type Person {
+
+type Person {
     name: String!
     phone: String!
     address: Address!
     id: ID!
   }
+  
   type Query {
+    me: User
     personCount: Int!
     allPersons: [Person!]!
     findPerson(name: String!): Person
     allPersonsWithPhone(phone: YesNo): [Person!]!
   }
   type Mutation {
+    createUser(
+      username: String!
+      password:String!
+      email:String!
+    ): User
+    
+    login(
+      username: String!
+      password: String!
+    ): Token
+
     addPerson(
       name: String!
       phone: String
       street: String!
       city: String!
     ): Person
+
     editNumber(
       name: String!
       phone: String!
     ): Person
+
+    addAsFriend(
+      username: String!
+    ): User
+
   }
 `;
 
@@ -67,6 +85,9 @@ const resolvers = {
       return Person.find({ phone: { $exists: args.phone === "YES" } });
     },
     findPerson: async (root, args) => Person.findOne({ name: args.name }),
+    me: (root, args, context) => {
+      return context.currentUser;
+    },
   },
   Person: {
     address: (root) => {
@@ -78,13 +99,24 @@ const resolvers = {
   },
 
   Mutation: {
-    addPerson: async (root, args) => {
+    addPerson: async (root, args, context) => {
       const person = new Person({ ...args });
+      const currentUser = context.currentUser;
+
+      if (!currentUser) {
+        throw new GraphQLError("not authenticated", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+          },
+        });
+      }
 
       try {
         await person.save();
+        currentUser.friends = currentUser.friends.concat(person);
+        await currentUser.save();
       } catch (error) {
-        throw new GraphQLError("Saving person failed", {
+        throw new GraphQLError("Saving user failed", {
           extensions: {
             code: "BAD_USER_INPUT",
             invalidArgs: args.name,
@@ -92,6 +124,7 @@ const resolvers = {
           },
         });
       }
+
       return person;
     },
     editNumber: async (root, args) => {
@@ -117,6 +150,70 @@ const resolvers = {
       }
       return person;
     },
+    createUser: async (root, args) => {
+      const user = new User({
+        username: args.username,
+        email: args.email,
+        password: args.password,
+      });
+
+      return user.save().catch((error) => {
+        throw new GraphQLError("Creating the user failed", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+            invalidArgs: args.name,
+            error,
+          },
+        });
+      });
+    },
+    login: async (root, args) => {
+      const user = await User.findOne({ username: args.username });
+
+      if (!user || args.password !== user.password) {
+        throw new GraphQLError("wrong credentials", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+          },
+        });
+      }
+
+      const userForToken = {
+        username: user.username,
+        id: user._id,
+      };
+
+      return { value: jwt.sign(userForToken, process.env.JWT_SECRET) };
+    },
+    addAsFriend: async (root, args, { currentUser }) => {
+      // ! Fix friend check
+
+      const person = await Person.findOne({ name: args.username });
+
+      const isFriend = (person) =>
+        currentUser.friends
+          .map((f) => f._id.toString())
+          .includes(person._id.toString());
+
+      if (!currentUser) {
+        throw new GraphQLError("wrong credentials", {
+          extensions: { code: "BAD_USER_INPUT" },
+        });
+      }
+
+      console.log(isFriend(person));
+
+      if (!isFriend(person)) {
+        currentUser.friends = currentUser.friends.concat(person);
+        await currentUser.save();
+      } else {
+        throw new GraphQLError("Already friends.", {
+          extensions: { code: "BAD_USER_INPUT" },
+        });
+      }
+
+      return currentUser;
+    },
   },
 };
 
@@ -125,14 +222,41 @@ const server = new ApolloServer({
   resolvers,
 });
 
-startStandaloneServer(server, {
-  listen: { port: 4000 },
-}).then(({ url }) => {
-  console.log(`Server ready at ${url}`);
-});
+DBconnection.connectDB()
+  .then((conn) => {
+    console.log("Connected to db successfully."),
+      startStandaloneServer(server, {
+        listen: { port: 4000 },
+        // The object returned by context is given to all resolvers as their third parameter.
+        // Context is the right place to do things which are shared by multiple resolvers, like user identification.
+        context: async ({ req, res }) => {
+          const auth = req ? req.headers.authorization : null;
+
+          if (auth && auth.startsWith("Bearer ")) {
+            const decodedToken = jwt.verify(
+              auth.substring(7),
+              process.env.JWT_SECRET
+            );
+
+            const currentUser = await User.findById(decodedToken.id).populate(
+              "friends"
+            );
+
+            console.log(currentUser);
+            return { currentUser };
+          }
+        },
+      }).then(({ url }) => {
+        console.log(`Server ready at ${url}`);
+      });
+  })
+  .catch((error) => {
+    console.error(`Error connecting to db: ${error.message}`);
+  });
 
 // ? Executing the queries
 /*
+
   get all persons
 query AllPersons {
   allPersons {
@@ -185,7 +309,45 @@ mutation {
   }
 }
 
+create new person
+mutation {
+  createUser (
+    username: "mluukkai"
+  ) {
+    username
+    id
+  }
+}
+
+login user
+mutation {
+  login (
+    username: "mluukkai"
+    password: "test"
+  ) {
+    value
+  }
+}
 
 
+
+query {
+  me {
+    email
+    username
+    friends {
+       name
+      phone
+    }
+  }
+}
+
+
+mutation {
+  createUser(email: "test@gmail.com", username: "mluukkai", password: "test") {
+    username
+    id
+  }
+}
 
 */
