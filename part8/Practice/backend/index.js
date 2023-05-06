@@ -86,6 +86,7 @@ const resolvers = {
     },
     findPerson: async (root, args) => Person.findOne({ name: args.name }),
     me: (root, args, context) => {
+      console.log(`The context is: ${context}`);
       return context.currentUser;
     },
   },
@@ -197,7 +198,7 @@ const resolvers = {
 
       if (!currentUser) {
         throw new GraphQLError("wrong credentials", {
-          extensions: { code: "BAD_USER_INPUT" },
+          extensions: {code: "UNAUTHORIZED" },
         });
       }
 
