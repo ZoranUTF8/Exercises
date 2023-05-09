@@ -1,16 +1,27 @@
 import { useEffect } from "react";
 
-const Notify = ({ errorMessage, setError }) => {
+const Notify = ({ errorMessage, setErrorMessage }) => {
   useEffect(() => {
     if (errorMessage) {
       setTimeout(() => {
-        setError(null);
+        setErrorMessage(null);
       }, 3000);
     }
   }, [errorMessage]);
 
   return (
-    <div style={{ color: "red" }}>{errorMessage ? errorMessage : null}</div>
+    <div
+      style={{
+        color: "red",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
+      }}
+    >
+      {errorMessage ? errorMessage : null}
+    </div>
   );
 };
 

@@ -198,7 +198,7 @@ const resolvers = {
 
       if (!currentUser) {
         throw new GraphQLError("wrong credentials", {
-          extensions: {code: "UNAUTHORIZED" },
+          extensions: { code: "UNAUTHORIZED" },
         });
       }
 

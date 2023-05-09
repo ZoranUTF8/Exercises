@@ -57,4 +57,18 @@ const EDIT_NUMBER = gql`
   }
 `;
 
-export default { FIND_PERSON, ALL_PERSONS, CREATE_PERSON, EDIT_NUMBER };
+const LOGIN_USER = gql`
+  mutation login($username: String!, $password: String!) {
+    login(username: $username, password: $password) {
+      value
+    }
+  }
+`;
+
+export default {
+  FIND_PERSON,
+  ALL_PERSONS,
+  CREATE_PERSON,
+  EDIT_NUMBER,
+  LOGIN_USER,
+};
