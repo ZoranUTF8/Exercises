@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { TextField, Button, Container } from "@mui/material";
 import { useMutation } from "@apollo/client";
 import queries from "../queries/queries";
+import { toast } from "react-toastify";
 
-const LoginForm = ({ setToken, setErrorMessage }) => {
+const LoginForm = ({ setToken }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -14,16 +15,20 @@ const LoginForm = ({ setToken, setErrorMessage }) => {
 
   const [login, result] = useMutation(queries.LOGIN_USER, {
     onError: (error) => {
-      console.log(error);
-      setErrorMessage(error.graphQLErrors[0].message);
+      toast(error.graphQLErrors[0].message);
     },
   });
 
   useEffect(() => {
     if (result.data) {
-      const token = result.data.login.value;
+      const token = result.data.loginUser.value;
+
+      toast("Logged in", {
+        position: "top-right",
+        autoClose: 5000,
+      });
       setToken(token);
-      localStorage.setItem("phonenumbers-user-token", token);
+      localStorage.setItem("library-user-token", token);
     }
   }, [result.data]);
 

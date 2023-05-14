@@ -48,9 +48,9 @@ const AddBook = () => {
       });
     }
   };
-  
+
   const [createBook] = useMutation(queries.CREATE_BOOK, {
-    refetchQueries: [{ query: queries.ALL_BOOKS }],
+    refetchQueries: [{ query: queries.ALL_BOOKS, query: queries.ALL_AUTHORS }],
   });
 
   const submit = (event) => {
@@ -80,7 +80,7 @@ const AddBook = () => {
         padding: "20px",
       }}
     >
-      <h2>Add new person</h2>
+      <h2>Add new book</h2>
       <form
         onSubmit={submit}
         sx={{

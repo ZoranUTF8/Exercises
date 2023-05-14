@@ -1,27 +1,40 @@
 import { gql } from "@apollo/client";
 
+//? Fragments
+/* 
+It is pretty common in GraphQL that multiple queries return similar results.
+Situations can be simplified with the use of fragments.
+Let's declare a fragment for selecting all fields of a person:
+*/
+
+const PERSON_DETAILS = gql`
+  fragment PersonDetails on Person {
+    id
+    name
+    phone
+    address {
+      street
+      city
+    }
+  }
+`;
+
 const FIND_PERSON = gql`
   query findPersonByName($nameToSearch: String!) {
     findPerson(name: $nameToSearch) {
-      name
-      phone
-      id
-      address {
-        street
-        city
-      }
+      ...PersonDetails
     }
   }
+  ${PERSON_DETAILS}
 `;
 
 const ALL_PERSONS = gql`
   query {
     allPersons {
-      name
-      phone
-      id
+      ...PersonDetails
     }
   }
+  ${PERSON_DETAILS}
 `;
 
 const CREATE_PERSON = gql`

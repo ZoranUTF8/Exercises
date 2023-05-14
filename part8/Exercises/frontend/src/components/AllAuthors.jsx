@@ -5,7 +5,6 @@ import TableDisplay from "./TableDisplay";
 
 const AllAuthors = () => {
   const [allAuthors, setAllAuthors] = useState([]);
-  const [error, serError] = useState(null);
 
   const result = useQuery(queries.ALL_AUTHORS);
 

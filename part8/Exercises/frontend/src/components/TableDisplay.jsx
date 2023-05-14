@@ -12,9 +12,8 @@ import {
 } from "@mui/material";
 
 const TableDisplay = ({ dataToDisplay, type }) => {
-
   return (
-    <div>
+    <Container>
       <TableContainer component={Paper} elevation={3}>
         <Table aria-label="simple table">
           <TableHead>
@@ -26,6 +25,9 @@ const TableDisplay = ({ dataToDisplay, type }) => {
               <TableCell align="center">
                 {type === "authors" ? "Book count" : "Published"}
               </TableCell>
+              {type === "books" && (
+                <TableCell align="center">"Genres"</TableCell>
+              )}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -39,7 +41,7 @@ const TableDisplay = ({ dataToDisplay, type }) => {
                     ? row.born
                       ? row.born
                       : "No born year provided."
-                    : row.author}
+                    : row.author.name}
                 </TableCell>
                 <TableCell align="center">
                   {type === "authors"
@@ -48,6 +50,13 @@ const TableDisplay = ({ dataToDisplay, type }) => {
                       : "No books."
                     : row.published}
                 </TableCell>
+                {type === "books" && (
+                  <TableCell>
+                    {row.genres.map((genre, ind) => (
+                      <span key={ind}>{genre} </span>
+                    ))}
+                  </TableCell>
+                )}
                 <TableCell align="right">
                   <Button
                     variant="outlined"
@@ -62,7 +71,7 @@ const TableDisplay = ({ dataToDisplay, type }) => {
           </TableBody>
         </Table>
       </TableContainer>
-    </div>
+    </Container>
   );
 };
 

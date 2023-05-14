@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
@@ -12,6 +12,7 @@ import {
 import { setContext } from "@apollo/client/link/context";
 
 const authLink = setContext((_, { headers }) => {
+
   const token = localStorage.getItem("phonenumbers-user-token");
   return {
     headers: {

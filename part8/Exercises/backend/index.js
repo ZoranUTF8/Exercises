@@ -90,6 +90,7 @@ const resolvers = {
         }
 
         const books = await Book.find(query).populate("author");
+
         return books;
       } catch (error) {
         throw new Error("Error retrieving books");
@@ -169,13 +170,13 @@ const resolvers = {
         author: existingAuthor._id,
         genres,
       });
+
       try {
         await newBook.save();
-
         existingAuthor.bookCount += 1;
-
         await existingAuthor.save();
       } catch (err) {
+        console.log("ERROR IS: ", err);
         if (err.name === "ValidationError" && err.errors.title) {
           // title validation error
           throw new GraphQLError(
@@ -183,7 +184,6 @@ const resolvers = {
             { extensions: { code: "BAD_USER_INPUT", invalidArgs: args } }
           );
         } else {
-          console.log(err);
           throw new GraphQLError(err._message, {
             extensions: { code: "BAD_USER_INPUT", invalidArgs: args },
           });
@@ -239,9 +239,8 @@ const resolvers = {
     },
     loginUser: async (root, args) => {
       const currentUser = await User.findOne({ username: args.username });
-
       if (!currentUser || args.password !== currentUser.password) {
-        throw new GraphQLError("wrong credentials", {
+        throw new GraphQLError("Wrong credentials", {
           extensions: {
             code: "BAD_USER_INPUT",
           },
@@ -253,7 +252,9 @@ const resolvers = {
         id: currentUser._id,
       };
 
-      return { value: jwt.sign(tokenForUser, process.env.JWT_SECRET) };
+      const value = jwt.sign(tokenForUser, process.env.JWT_SECRET);
+
+      return { value: value };
     },
   },
 };
@@ -280,7 +281,6 @@ DBConnection.connectDB()
           const currentUser = await User.findById(
             decodedTokenFromRequest.id
           ).select("-password");
-
           return { currentUser };
         }
       },
@@ -308,7 +308,7 @@ query {
 }
 login user
 mutation {
-  login (
+  loginUser (
     username: "zochan"
     password: "testpassword"
   ) {

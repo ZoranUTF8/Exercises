@@ -10,7 +10,6 @@ function App() {
   const [token, setToken] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
 
-  
   const client = useApolloClient();
 
   const logoutUser = () => {
@@ -18,6 +17,8 @@ function App() {
     localStorage.clear();
     client.resetStore();
   };
+
+  
 
   if (!token) {
     return (

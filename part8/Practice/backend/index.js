@@ -243,7 +243,6 @@ DBconnection.connectDB()
               "friends"
             );
 
-            console.log(currentUser);
             return { currentUser };
           }
         },
@@ -276,7 +275,7 @@ query {
   }
 }
 
-get all persons by phone numbber or without phone number
+get all persons by phone number or without phone number
 query {
   allPersonsWithPhone(phone: YES) {
     phone
