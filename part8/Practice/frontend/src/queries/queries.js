@@ -7,7 +7,7 @@ Situations can be simplified with the use of fragments.
 Let's declare a fragment for selecting all fields of a person:
 */
 
-const PERSON_DETAILS = gql`
+const PERSON_DETAILS_FRAGMENT = gql`
   fragment PersonDetails on Person {
     id
     name
@@ -25,7 +25,7 @@ const FIND_PERSON = gql`
       ...PersonDetails
     }
   }
-  ${PERSON_DETAILS}
+  ${PERSON_DETAILS_FRAGMENT}
 `;
 
 const ALL_PERSONS = gql`
@@ -34,7 +34,7 @@ const ALL_PERSONS = gql`
       ...PersonDetails
     }
   }
-  ${PERSON_DETAILS}
+  ${PERSON_DETAILS_FRAGMENT}
 `;
 
 const CREATE_PERSON = gql`
