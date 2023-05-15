@@ -96,7 +96,7 @@ start();
 query AllPersons {
   allPersons {
     name
-  }
+  } 
 }
 
 find a single person
