@@ -1,5 +1,22 @@
-const multiplicator = (a: number, b: number, printText: string) => {
-  console.log(printText, a * b);
+type calculatorOperation = "multiply" | "add" | "divide";
+
+const calculator = (a: number, b: number, op: calculatorOperation): string => {
+  switch (op) {
+    case "multiply":
+      return `The result of multiplication is: ${a * b}`;
+    case "divide":
+      if (b === 0) throw new Error("Can't divide by 0!");
+      return `The result of dividing is: ${a / b}`;
+
+    case "add":
+      return `The result of adding is: ${a + b}`;
+    default:
+      throw new Error("Operation is not multiply, add or divide!");
+  }
 };
 
-multiplicator(5, 4, "Multiplied a string and 4, the result is:");
+const a: number = Number(process.argv[2]);
+const b: number = Number(process.argv[3]);
+const operation: calculatorOperation = process.argv[4] as calculatorOperation;
+const result = calculator(a, b, operation);
+console.log(result);

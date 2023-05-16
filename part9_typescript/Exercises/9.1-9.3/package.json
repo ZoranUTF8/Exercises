@@ -1,0 +1,17 @@
+{
+  "name": "9.1-9.3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "bmiCalculator": "ts-node bmiCalculator",
+    "exerciseCalculator": "ts-node exerciseCalculator"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
+  }
+}
