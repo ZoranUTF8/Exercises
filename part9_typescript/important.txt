@@ -1,0 +1,30 @@
+This part is all about TypeScript: an open-source typed superset of JavaScript developed by Microsoft that compiles to plain JavaScript.
+This means that TypeScript extends the functionality of JavaScript by adding new features and syntax while still maintaining compatibility
+with JavaScript.
+
+As a superset, TypeScript includes all the features of JavaScript and introduces additional features such as
+:static typing, interfaces, classes, modules, and more. 
+These features enable developers to write more structured and maintainable code by catching errors during development, providing better
+tooling support, and enhancing code organization.
+
+TypeScript code cannot be executed directly by browsers or JavaScript engines. Instead, it needs to be transpiled or compiled into
+JavaScript code, which can then be executed by browsers, Node.js, or other JavaScript runtime environments. The TypeScript compiler (tsc)
+is responsible for transforming TypeScript code into plain JavaScript that can be understood and executed by JavaScript engines.
+
+By compiling TypeScript code to JavaScript, developers can leverage the benefits of TypeScript during development while ensuring that
+the final output is compatible with all JavaScript environments. This allows TypeScript code to be used in a wide range of scenarios,
+including web development, server-side development, and more.
+
+In TypeScript, human-readable source code is transformed into another human-readable source code, so the correct term would be transpiling.
+However, compiling has been the most commonly-used term in this context, so we will continue to use it.
+
+Tooling:
+npm package ts-node. It compiles and executes the specified TypeScript file immediately so that there is no need for a separate compilation step.
+
+
+
+Files usage:
+
+The tsconfig.json file is used to define how the TypeScript compiler should interpret the code, how strictly the compiler should work, which
+files to watch or ignore, and much more. For now, we will only use the compiler option noImplicitAny, which does not require having types for
+all variables used.
