@@ -18,11 +18,10 @@ const exerciseCalculator = (
       0
     ) / dailyExerciseHours.length;
 
- 
-  const trainingDays = dailyExerciseHours.filter(day => day > 0).length;
+  const trainingDays = dailyExerciseHours.filter((day) => day > 0).length;
 
-
-  const successResult = averageExerciseTime >= targetAmountOfDailyhours ? true : false;
+  const successResult =
+    averageExerciseTime >= targetAmountOfDailyhours ? true : false;
 
   let exerciseRating;
 
@@ -98,4 +97,7 @@ const exerciseCalculator = (
   };
 };
 
-console.log(exerciseCalculator([3, 0, 2, 4.5, 0, 3, 1], 2));
+const [target, ...numbers] = process.argv.slice(2).map(Number);
+const exerciseCalculatorResult = exerciseCalculator(numbers, target);
+
+console.log(exerciseCalculatorResult);

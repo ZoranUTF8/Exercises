@@ -1,36 +1,49 @@
-const calculateBmi = (height: number, weight: number): string => {
+const calculateBmi = (height: number, weight: number): object => {
   // Convert height to meters
   const heightInMeters = height / 100;
 
   // Calculate BMI
   const bmi = weight / (heightInMeters * heightInMeters);
 
-  let result = "";
+  let result = {
+    weight: `${weight} kg`,
+    height: `${heightInMeters} cm.`,
+    bmi: "",
+  };
 
   switch (true) {
     case bmi < 18.5:
-      result = "Underweight";
+      result.bmi = "Underweight";
       break;
     case bmi >= 18.5 && bmi < 25:
-      result = "Normal weight";
+      result.bmi = "Normal weight";
       break;
     case bmi >= 25 && bmi < 30:
-      result = "Overweight";
+      result.bmi = "Overweight";
       break;
     case bmi >= 30 && bmi < 35:
-      result = "Obesity (Class 1)";
+      result.bmi = "Obesity (Class 1)";
       break;
     case bmi >= 35 && bmi < 40:
-      result = "Obesity (Class 2)";
+      result.bmi = "Obesity (Class 2)";
       break;
     case bmi >= 40:
-      result = "Extreme obesity (Class 3)";
+      result.bmi = "Extreme obesity (Class 3)";
       break;
     default:
-      result = "Invalid BMI value";
+      result.bmi = "Invalid BMI value";
+      break;
   }
 
   return result;
 };
 
-console.log(calculateBmi(176, 74));
+export default calculateBmi;
+
+// ? Command line usage
+// const height: number = Number(process.argv[2]);
+// const weight: number = Number(process.argv[3]);
+// const result = calculateBmi(height, weight);
+// console.log(
+//   `The result for height ${height} and weight ${weight} is: ${result}`
+// );

@@ -21,6 +21,9 @@ However, compiling has been the most commonly-used term in this context, so we w
 Tooling:
 npm package ts-node. It compiles and executes the specified TypeScript file immediately so that there is no need for a separate compilation step.
 
+npm install --save-dev ts-node-dev It is meant to be used only with a development environment that takes care of recompilation on every change, so restarting the application won't be necessary.
+
+
 
 
 Files usage:
