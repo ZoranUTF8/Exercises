@@ -8,7 +8,7 @@ interface ExerciseResult {
   average: number;
 }
 
-const exerciseCalculator = (
+export const exerciseCalculator = (
   dailyExerciseHours: number[],
   targetAmountOfDailyhours: number
 ): ExerciseResult => {
@@ -51,6 +51,7 @@ const exerciseCalculator = (
       exerciseRating = 7;
       break;
     default:
+      exerciseRating = -1;
       console.log("No such option");
       break;
   }
@@ -82,7 +83,7 @@ const exerciseCalculator = (
       exerciseRatingDescription = "you are the top 1!";
       break;
     default:
-      console.log("No such option");
+      exerciseRatingDescription = "No such option";
       break;
   }
 
@@ -97,7 +98,7 @@ const exerciseCalculator = (
   };
 };
 
-const [target, ...numbers] = process.argv.slice(2).map(Number);
-const exerciseCalculatorResult = exerciseCalculator(numbers, target);
+// const [target, ...numbers] = process.argv.slice(2).map(Number);
+// const exerciseCalculatorResult = exerciseCalculator(numbers, target);
 
-console.log(exerciseCalculatorResult);
+// console.log(exerciseCalculatorResult);

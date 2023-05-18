@@ -5,7 +5,7 @@ const calculateBmi = (height: number, weight: number): object => {
   // Calculate BMI
   const bmi = weight / (heightInMeters * heightInMeters);
 
-  let result = {
+  const result = {
     weight: `${weight} kg`,
     height: `${heightInMeters} cm.`,
     bmi: "",

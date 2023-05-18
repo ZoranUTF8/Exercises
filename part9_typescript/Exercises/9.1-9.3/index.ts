@@ -1,7 +1,10 @@
 import express, { Request, Response } from "express";
 import calculateBmi from "./bmiCalculator";
+import { exerciseCalculator } from "./exerciseCalculator";
 
 const app = express();
+// Middleware to parse JSON bodies
+app.use(express.json());
 
 app.get("/hello", (_req: Request, res: Response) => {
   res.send("Hello Full Stack!");
@@ -10,8 +13,6 @@ app.get("/hello", (_req: Request, res: Response) => {
 // Endpoint for BMI calculator
 app.get("/bmi", (req: Request, res: Response) => {
   const { height, weight } = req.query;
-
-  console.log(height, weight);
 
   // Check if height and weight are provided
   if (!height || !weight) {
@@ -35,6 +36,35 @@ app.get("/bmi", (req: Request, res: Response) => {
   const result = calculateBmi(heightInCm, weightInKg);
   console.log(result);
   // Return the calculated BMI
+  return res.json({ result });
+});
+
+// Endpoint for Exercise Calculator
+app.post("/exercises", (req: Request, res: Response) => {
+  const { daily_exercises, target } = req.body;
+
+  if (!daily_exercises || !target) {
+    return res.json({
+      error: "parameters missing",
+    });
+  }
+
+  if (
+    !Array.isArray(daily_exercises) ||
+    !daily_exercises.every((x) => typeof x === "number")
+  ) {
+    return res.json({
+      error: "daily_exercises should be an array of numbers",
+    });
+  }
+
+  if (typeof target !== "number") {
+    return res.json({
+      error: "target should be a number",
+    });
+  }
+  const result = exerciseCalculator(daily_exercises, target);
+
   return res.json({ result });
 });
 
