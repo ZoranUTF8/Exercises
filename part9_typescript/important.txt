@@ -25,6 +25,86 @@ npm install --save-dev ts-node-dev It is meant to be used only with a developmen
 
 
 
+Starting with ts:
+ npm install typescript --save-dev
+
+ "scripts": {
+    "tsc": "tsc"
+  },
+
+
+We can now initialize our tsconfig.json settings by running:
+
+npm run tsc -- --init
+
+
+npm install express
+npm install --save-dev eslint @types/express @typescript-eslint/eslint-plugin @typescript-eslint/parser
+
+
+We also create a .eslintrc file with the following content:
+
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking"
+  ],
+  "plugins": ["@typescript-eslint"],
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true
+  },
+  "rules": {
+    "@typescript-eslint/semi": ["error"],
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/restrict-template-expressions": "off",
+    "@typescript-eslint/restrict-plus-operands": "off",
+    "@typescript-eslint/no-unsafe-member-access": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      { "argsIgnorePattern": "^_" }
+    ],
+    "no-case-declarations": "off"
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  }
+}
+
+
+Now we just need to set up our development environment, and we are ready to start writing some serious code. There are many different options for this. One option could be to use the familiar nodemon with ts-node. However, as we saw earlier, ts-node-dev does the same thing, so we will use that instead. So, let's install ts-node-dev:
+npm install --save-dev ts-node-dev
+
+
+
+
+As you can see, there is a lot of stuff to go through before beginning the actual coding. When you are working on a real project, careful preparations support your development process. Take the time needed to create a good setup for yourself and your team, so that everything runs smoothly in the long run.
+
+
+
+We finally define a few more npm scripts, and voilà, we are ready to begin:
+
+{
+  // ...
+  "scripts": {
+    "tsc": "tsc",
+    "dev": "ts-node-dev index.ts",
+    "lint": "eslint --ext .ts ."
+  },
+  // ...
+}
+
+
+Let's try to create a production build by running the TypeScript compiler. Since we have defined the outdir in our tsconfig.json, nothing's left but to run the script npm run tsc.
+
+
+npm run tsc
+
+Just like magic, a native runnable JavaScript production build of the Express backend is created in file index.js inside the directory build.
 
 Files usage:
 
