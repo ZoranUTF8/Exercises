@@ -27,6 +27,6 @@
     },
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
-        "project": "./tsconfig.json"
+        "project": "/Users/zoranhome/Desktop/Dev/fullstack-hy2023/part9_typescript/Practice/flight_diary/tsconfig.json"
     }
 }
