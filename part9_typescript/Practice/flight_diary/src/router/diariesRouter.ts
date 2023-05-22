@@ -2,8 +2,12 @@ import express from "express";
 import diaryService from "../services/diaryService";
 const diariesRouter = express.Router();
 
-diariesRouter.get("/", (_req, res) => {
-  res.send(diaryService.getEntries());
+diariesRouter.get("/nonSensitiveData", (_req, res) => {
+  res.send(diaryService.getNonSensitiveEntries());
+});
+
+diariesRouter.get("/sensitiveData", (_req, res) => {
+  res.send(diaryService.getSensitiveEntriesData());
 });
 
 diariesRouter.post("/", (_req, res) => {

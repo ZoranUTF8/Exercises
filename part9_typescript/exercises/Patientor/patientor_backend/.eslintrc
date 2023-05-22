@@ -27,6 +27,8 @@
     },
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
-        "project": "./tsconfig.json"
+
+        "project": "/Users/zoranhome/Desktop/Dev/fullstack-hy2023/part9_typescript/exercises/Patientor/patientor_backend/tsconfig.json"
+
     }
 }

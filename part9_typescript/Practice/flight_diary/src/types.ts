@@ -16,3 +16,7 @@ export interface DiaryEntry {
   visibility: Visibility;
   comment?: string;
 }
+
+// ? We omit the comment filed and the id
+export type NonSensitiveDiaryEntry = Omit<DiaryEntry, "comment" | "id">;
+ 
