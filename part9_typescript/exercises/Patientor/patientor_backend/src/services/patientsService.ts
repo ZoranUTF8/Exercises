@@ -1,6 +1,5 @@
 import patients from "../demoData/patients";
-import { Patient, NonSensitivePatientData } from "../types";
-
+import { Patient, NonSensitivePatientData, NewPatientEntry } from "../types";
 const allPatients: Patient[] = patients;
 
 const getAllPatientsNonSensitiveData = (): NonSensitivePatientData[] => {
@@ -17,4 +16,20 @@ const getAllPatientsSensitiveData = (): Patient[] => {
   return allPatients;
 };
 
-export default { getAllPatientsNonSensitiveData, getAllPatientsSensitiveData };
+const addNewPatient = (newPatient: NewPatientEntry): Patient => {
+  
+  const newPatientEntry = {
+    id: Math.max(...allPatients.map((d) => d.id)) + 1,
+    ...newPatient,
+  };
+
+  allPatients.push(newPatientEntry);
+  console.log(`ALL PATIENTS: `, allPatients);
+  return newPatientEntry;
+};
+
+export default {
+  getAllPatientsNonSensitiveData,
+  getAllPatientsSensitiveData,
+  addNewPatient,
+};
