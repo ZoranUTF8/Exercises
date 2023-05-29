@@ -1,8 +1,9 @@
-import React from 'react'
+import { ContentProps } from "../types"
 
-const Total = () => {
+const Total = ({ courseParts }: ContentProps) => {
+
   return (
-    <div>Total</div>
+    <div><h1>Total:</h1> {courseParts.reduce((carry, part) => carry + part.exerciseCount, 0)}</div>
   )
 }
 

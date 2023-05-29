@@ -1,9 +1,11 @@
 
 import { Header, Total, Content } from "./components";
+import { CoursePart } from "./types";
+
 
 const App = () => {
   const courseName = "Half Stack application development";
-  const courseParts = [
+  const courseParts: CoursePart[] = [
     {
       name: "Fundamentals",
       exerciseCount: 10
@@ -17,12 +19,11 @@ const App = () => {
       exerciseCount: 14
     }
   ];
-
   return (
     <div>
       <Header name={courseName} />
-      <Content />
-      <Total />
+      <Content courseParts={courseParts} />
+      <Total courseParts={courseParts} />
     </div>
   );
 };
