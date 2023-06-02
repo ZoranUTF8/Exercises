@@ -7,6 +7,7 @@ const App = () => {
   const courseName = "Half Stack application development";
 
 
+
   const courseParts: CoursePartUnion[] = [
     {
       name: "Fundamentals",
@@ -32,6 +33,12 @@ const App = () => {
       description: "Confusing description",
       backgroundMaterial: "https://type-level-typescript.com/template-literal-types",
       kind: "background"
+    },
+    {
+      name: "TypeScript in frontend",
+      exerciseCount: 10,
+      description: "a hard part",
+      kind: "basic",
     },
   ];
 

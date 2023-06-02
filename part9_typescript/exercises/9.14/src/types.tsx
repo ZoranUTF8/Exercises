@@ -2,14 +2,6 @@ export interface HeaderProps {
     name: string;
 }
 
-export interface CoursePart {
-    name: string;
-    exerciseCount: number;
-}
-
-export interface ContentProps {
-    courseParts: CoursePart[];
-}
 
 
 /*
@@ -19,27 +11,34 @@ we have now introduced an additional attribute called kind that has
 a literal type, it is a "hard coded" string, distinct for each course part.
 We shall soon see where the attribute kind is used!
 */
-interface CoursePartBasic {
+
+
+export interface ContentProps {
+    courseParts: CoursePartUnion[];
+}
+
+interface CoursePartBase {
     name: string;
     exerciseCount: number;
+}
+
+interface CoursePartBasic extends CoursePartBase {
     description: string;
     kind: "basic"
 }
 
-interface CoursePartGroup {
-    name: string;
-    exerciseCount: number;
+interface CoursePartGroup extends CoursePartBase {
     groupProjectCount: number;
     kind: "group"
 }
 
-interface CoursePartBackground {
-    name: string;
-    exerciseCount: number;
+interface CoursePartBackground extends CoursePartBase {
     description: string;
     backgroundMaterial: string;
     kind: "background"
 }
+
+
 
 /*
 
