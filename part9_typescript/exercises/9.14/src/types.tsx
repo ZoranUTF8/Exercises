@@ -17,25 +17,35 @@ export interface ContentProps {
     courseParts: CoursePartUnion[];
 }
 
+export interface PartProps {
+    partData: CoursePartUnion
+}
+
+
+
 interface CoursePartBase {
     name: string;
     exerciseCount: number;
 }
 
-interface CoursePartBasic extends CoursePartBase {
-    description: string;
+interface CoursePartDescription extends CoursePartBase { description?: string }
+
+interface CoursePartBasic extends CoursePartDescription {
     kind: "basic"
 }
 
-interface CoursePartGroup extends CoursePartBase {
+interface CoursePartGroup extends CoursePartDescription {
     groupProjectCount: number;
     kind: "group"
 }
 
-interface CoursePartBackground extends CoursePartBase {
-    description: string;
+interface CoursePartBackground extends CoursePartDescription {
     backgroundMaterial: string;
     kind: "background"
+}
+
+interface CoursePartRequirements extends CoursePartDescription {
+    requirements: string[]; kind: "special"
 }
 
 
@@ -46,4 +56,4 @@ Next, we will create a type union of all these types. We can then use it to defi
 which should accept any of these course part types:
 */
 
-export type CoursePartUnion = CoursePartBasic | CoursePartGroup | CoursePartBackground;
+export type CoursePartUnion = CoursePartBasic | CoursePartGroup | CoursePartBackground | CoursePartRequirements;
