@@ -1,5 +1,8 @@
-import { useState } from 'react';
-import { Note } from "./types"
+import { useState, useEffect } from 'react';
+import { Note } from "./types";
+import { getAllNotes, createNote } from './Services/noteService';
+
+import axios from "axios"
 import './App.css';
 
 function App() {
@@ -17,7 +20,23 @@ function App() {
     }
     setNotes(notes.concat(noteToAdd));
     setNewNote('')
+
+    // or to server
+    // createNote({ content: newNote }).then(data => {
+    //   setNotes(notes.concat(data))
+    // })
   };
+
+
+
+
+  useEffect(() => {
+    getAllNotes().then(data => {
+      setNotes(data)
+    })
+  }, [])
+
+
   return (
     <div>
       <form onSubmit={noteCreation}>
