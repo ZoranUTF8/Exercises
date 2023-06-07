@@ -37,3 +37,13 @@ form {
   padding: 20px;
   background-color: #fff;
 }
+
+.error {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 10px;
+  color: red;
+  background-color: aliceblue;
+}

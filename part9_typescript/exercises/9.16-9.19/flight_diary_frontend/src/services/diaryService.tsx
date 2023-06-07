@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError } from "axios";
 import { DiaryEntry, NewDiaryEntry } from "../types/Diary";
 
 const baseUrl = 'http://localhost:3001/api/diaries'
@@ -9,8 +9,13 @@ export const getAllDiaryEntries = () => {
         .then(response => response.data)
 }
 
-export const createDiary = (object: NewDiaryEntry) => {
-    return axios
-        .post<DiaryEntry>(baseUrl, object)
-        .then(response => response.data)
-}
+export const createDiary = async (object: NewDiaryEntry) => {
+    try {
+        const response = await axios.post<DiaryEntry>(baseUrl, object);
+        return response.data;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            throw new Error(error.message);
+        }
+    }
+};

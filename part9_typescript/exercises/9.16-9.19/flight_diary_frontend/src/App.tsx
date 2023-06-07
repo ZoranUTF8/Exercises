@@ -4,6 +4,7 @@ import { DiaryEntry, NewDiaryEntry, Weather, Visibility } from './types/Diary';
 import './App.css';
 
 function App() {
+  const [error, setError] = useState("")
   const [diaries, setDiaries] = useState<DiaryEntry[]>([])
   const [newDiary, setNewDiary] = useState<NewDiaryEntry>({
     date: "",
@@ -18,12 +19,34 @@ function App() {
     event.preventDefault()
 
     // Check if any fields are missing
-    if (!newDiary.date || !newDiary.weather || !newDiary.visibility || !newDiary.comment) {
-      alert('Please fill in all fields');
+    if (!newDiary.date || !newDiary.weather || !newDiary.visibility) {
+      setError('Please fill in all fields');
+      setTimeout(() => { setError("") }, 3000)
       return;
     }
 
-    createDiary(newDiary).then(data => { setDiaries(diaries.concat(data)) })
+    createDiary(newDiary)
+      .then(data => {
+        if (data) {
+          setDiaries(diaries.concat(data));
+          setNewDiary({
+            date: '',
+            weather: Weather.Sunny,
+            visibility: Visibility.Good,
+            comment: '',
+          });
+        } else {
+          // Handle the case where data is undefined
+          console.error('Data is undefined');
+        }
+      })
+      .catch(error => {
+
+        setError(error.message);
+        setTimeout(() => {
+          setError('');
+        }, 3000);
+      });
 
   }
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -40,9 +63,8 @@ function App() {
       ...prevState,
       [name]: value
     }));
+
   };
-
-
 
 
 
@@ -51,41 +73,48 @@ function App() {
 
   return (
     <div className="App">
+      {error && <h1 className='error'>{error}</h1>}
       <header className="App-header">
-        <ul>        {diaries.map((diaryEntry) => <li><h1 key={diaryEntry.id}>{diaryEntry.date}</h1><h3>Visibility:{diaryEntry.visibility}</h3><h3>Weather:{diaryEntry.weather}</h3><h3>{diaryEntry.comment && `Comment:${diaryEntry.comment}`}</h3></li>)}
+        <ul>        {diaries.map((diaryEntry) => <li key={diaryEntry.id}><h1 >{diaryEntry.date}</h1><h3>Visibility:{diaryEntry.visibility}</h3><h3>Weather:{diaryEntry.weather}</h3><h3>{diaryEntry.comment && `Comment:${diaryEntry.comment}`}</h3></li>)}
         </ul>
       </header>
       <main>
         <form onSubmit={addNewDiary}>
           <input
-            type="text"
+            type="date"
             name="date"
             value={newDiary.date}
             onChange={handleInputChange}
             placeholder="Date"
           />
-          <select
-            name="weather"
-            value={newDiary.weather}
-            onChange={handleSelectChange}
-          >
+          <div>
             {Object.values(Weather).map((weatherOption) => (
-              <option key={weatherOption} value={weatherOption}>
+              <label key={weatherOption}>
+                <input
+                  type="radio"
+                  name="weather"
+                  value={weatherOption}
+                  checked={newDiary.weather === weatherOption}
+                  onChange={handleInputChange}
+                />
                 {weatherOption}
-              </option>
+              </label>
             ))}
-          </select>
-          <select
-            name="visibility"
-            value={newDiary.visibility}
-            onChange={handleSelectChange}
-          >
+          </div>
+          <div>
             {Object.values(Visibility).map((visibilityOption) => (
-              <option key={visibilityOption} value={visibilityOption}>
+              <label key={visibilityOption}>
+                <input
+                  type="radio"
+                  name="visibility"
+                  value={visibilityOption}
+                  checked={newDiary.visibility === visibilityOption}
+                  onChange={handleInputChange}
+                />
                 {visibilityOption}
-              </option>
+              </label>
             ))}
-          </select>
+          </div>
           <input
             type="text"
             name="comment"
