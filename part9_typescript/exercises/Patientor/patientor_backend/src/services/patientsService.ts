@@ -1,4 +1,6 @@
 import patients from "../demoData/patients";
+import { v4 as uuidv4 } from "uuid";
+
 import { Patient, NonSensitivePatientData, NewPatientEntry } from "../types";
 const allPatients: Patient[] = patients;
 
@@ -17,19 +19,31 @@ const getAllPatientsSensitiveData = (): Patient[] => {
 };
 
 const addNewPatient = (newPatient: NewPatientEntry): Patient => {
-  
+  let myuuid = uuidv4();
+
   const newPatientEntry = {
-    id: Math.max(...allPatients.map((d) => d.id)) + 1,
+    id: myuuid,
     ...newPatient,
   };
 
   allPatients.push(newPatientEntry);
-  console.log(`ALL PATIENTS: `, allPatients);
   return newPatientEntry;
+};
+
+const getSinglePatient = (patientId: string): Patient | undefined => {
+  const parsedPatientId = parseInt(patientId);
+
+  const foundPatient: Patient | undefined = allPatients.find(
+    (p) => p.id === parsedPatientId
+  );
+
+  console.log(foundPatient);
+  return foundPatient;
 };
 
 export default {
   getAllPatientsNonSensitiveData,
   getAllPatientsSensitiveData,
   addNewPatient,
+  getSinglePatient,
 };
