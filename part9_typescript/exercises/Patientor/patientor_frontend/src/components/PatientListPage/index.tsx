@@ -9,7 +9,7 @@ import AddPatientModal from "../AddPatientModal";
 
 import HealthRatingBar from "../HealthRatingBar";
 
-import patientService from "../../services/patients";
+import patientService from "../../services/patientsService";
 
 interface Props {
   patients: Patient[]

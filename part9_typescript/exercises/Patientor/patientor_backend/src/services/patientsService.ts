@@ -1,7 +1,7 @@
 import patients from "../demoData/patients";
+import { Patient, NonSensitivePatientData, NewPatientEntry } from "../types";
 import { v4 as uuidv4 } from "uuid";
 
-import { Patient, NonSensitivePatientData, NewPatientEntry } from "../types";
 const allPatients: Patient[] = patients;
 
 const getAllPatientsNonSensitiveData = (): NonSensitivePatientData[] => {
@@ -19,10 +19,9 @@ const getAllPatientsSensitiveData = (): Patient[] => {
 };
 
 const addNewPatient = (newPatient: NewPatientEntry): Patient => {
-  let myuuid = uuidv4();
-
+  const newUUID: string = uuidv4();
   const newPatientEntry = {
-    id: myuuid,
+    id: newUUID,
     ...newPatient,
   };
 
@@ -31,13 +30,9 @@ const addNewPatient = (newPatient: NewPatientEntry): Patient => {
 };
 
 const getSinglePatient = (patientId: string): Patient | undefined => {
-  const parsedPatientId = parseInt(patientId);
-
   const foundPatient: Patient | undefined = allPatients.find(
-    (p) => p.id === parsedPatientId
+    (p) => p.id === patientId
   );
-
-  console.log(foundPatient);
   return foundPatient;
 };
 
