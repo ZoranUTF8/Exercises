@@ -20,6 +20,9 @@
 		},
 		{
 			"path": "../../../react_design_patterns"
+		},
+		{
+			"path": "../../../musashiknifequiz"
 		}
 	],
 	"settings": {}

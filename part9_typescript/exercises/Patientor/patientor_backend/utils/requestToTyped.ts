@@ -1,4 +1,4 @@
-import { NewPatientEntry, Gender } from "../src/types";
+import { NewPatientEntry, Gender, StayType, Entry } from "../src/types";
 
 /*
 unknown is the ideal type for our kind of situation of input 
@@ -111,4 +111,21 @@ const parseGender = (gender: unknown): Gender => {
 //   }
 //   return visibility;
 // };
-export default { toNewPatientEntry };
+
+// Function to validate the required fields for each entry type
+function validateEntryFields(entry: Entry): boolean {
+  switch (entry.type) {
+    case StayType.HealthCheck:
+      return "healthCheckRating" in entry;
+
+    case StayType.Hospital:
+      return "discharge" in entry;
+
+    case StayType.OccupationalHealthcare:
+      return "employerName" in entry;
+
+    default:
+      return false;
+  }
+}
+export default { toNewPatientEntry, validateEntryFields };

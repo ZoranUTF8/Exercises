@@ -3,8 +3,9 @@ import { useParams } from 'react-router-dom';
 import patientsService from "../../services/patientsService"
 import { Patient, Entry, HealthCheckEntry, StayType, OccupationalHealthcareEntry, HospitalEntry, Diagnoses } from "../../types"
 import { Typography, CircularProgress, Grid } from '@mui/material';
-
-
+import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
+import ReceiptIcon from '@mui/icons-material/Receipt';
+import NightShelterIcon from '@mui/icons-material/NightShelter';
 
 
 interface RouteParams extends Record<string, string | undefined> {
@@ -98,11 +99,13 @@ const SinglePatientDetailsPage = ({ diagnosesData }: Props) => {
                         if (entry.type === StayType.Hospital) {
                             const hospitalEntry = entry as HospitalEntry;
                             return (
-                                <div key={hospitalEntry.id}>
-                                    <strong>Date:</strong>{" "}
+
+                                <div key={hospitalEntry.id} style={{ border: "1px solid black", padding: "10px", marginBottom: "10px" }}>
+                                    <strong>Date:</strong>{" "} <NightShelterIcon />
                                     <Typography variant="body1" component="span" sx={{ fontWeight: "bold" }}>
-                                        <strong>{hospitalEntry.date}</strong>
+                                        <strong>{hospitalEntry.date}</strong><LocalHospitalIcon />
                                     </Typography>
+
                                     <Typography variant="body1">Description: {hospitalEntry.description}</Typography>
 
                                     <div>
@@ -115,7 +118,7 @@ const SinglePatientDetailsPage = ({ diagnosesData }: Props) => {
                                             ))}
                                         </ul>
                                     </div>
-
+                                    <Typography>Diagnosed by: {hospitalEntry.specialist}</Typography>
                                     <Typography variant="body1">Discharge Date: {hospitalEntry.discharge.date}</Typography>
                                     <Typography variant="body1">Discharge Criteria: {hospitalEntry.discharge.criteria}</Typography>
                                 </div>
@@ -123,14 +126,16 @@ const SinglePatientDetailsPage = ({ diagnosesData }: Props) => {
                         } else if (entry.type === StayType.OccupationalHealthcare) {
                             const occupationalHealthcareEntry = entry as OccupationalHealthcareEntry;
                             return (
-                                <div key={occupationalHealthcareEntry.id}>
-                                    <Typography variant="body1">Date: {occupationalHealthcareEntry.date}</Typography>
+                                <div key={occupationalHealthcareEntry.id} style={{ border: "1px solid black", padding: "10px", marginBottom: "10px" }}>
+
+                                    <Typography variant="body1">Date: {occupationalHealthcareEntry.date}</Typography>                                    <ReceiptIcon />
                                     <Typography variant="body1">Description: {occupationalHealthcareEntry.description}</Typography>
                                     {occupationalHealthcareEntry.diagnosisCodes && occupationalHealthcareEntry.diagnosisCodes.length > 0 && (
                                         <div>
                                             <Typography variant="body1">
                                                 Diagnose Codes:
                                             </Typography>
+                                            <LocalHospitalIcon />
                                             <ul>
                                                 {occupationalHealthcareEntry.diagnosisCodes.map((code: Diagnoses["code"]) => (
                                                     <li key={code}>{code} - {getDiagnosisExplanation(code)}</li>
@@ -139,6 +144,8 @@ const SinglePatientDetailsPage = ({ diagnosesData }: Props) => {
                                         </div>
                                     )}
                                     <Typography variant="body1">Employer Name: {occupationalHealthcareEntry.employerName}</Typography>
+                                    <Typography>Diagnosed by: {occupationalHealthcareEntry.specialist}</Typography>
+
                                     {occupationalHealthcareEntry.sickLeave && (
                                         <>
                                             <Typography variant="body1">Sick Leave Start Date: {occupationalHealthcareEntry.sickLeave.startDate}</Typography>
@@ -150,10 +157,12 @@ const SinglePatientDetailsPage = ({ diagnosesData }: Props) => {
                         } else {
                             const healthCheckEntry = entry as HealthCheckEntry;
                             return (
-                                <div key={healthCheckEntry.id}>
-                                    <Typography variant="body1">Date: {healthCheckEntry.date}</Typography>
+                                <div key={healthCheckEntry.id} style={{ border: "1px solid black", padding: "10px", marginBottom: "10px" }}>
+                                    <Typography variant="body1">Date: {healthCheckEntry.date}</Typography>               <LocalHospitalIcon />
                                     <Typography variant="body1">Description: {healthCheckEntry.description}</Typography>
                                     <Typography variant="body1">Health Check Rating: {healthCheckEntry.healthCheckRating}</Typography>
+                                    <Typography>Diagnosed by: {healthCheckEntry.specialist}</Typography>
+
                                 </div>
                             );
                         }
