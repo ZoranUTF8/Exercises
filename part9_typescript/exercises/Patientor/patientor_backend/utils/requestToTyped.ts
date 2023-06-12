@@ -1,4 +1,14 @@
-import { NewPatientEntry, Gender, StayType, Entry } from "../src/types";
+import {
+  NewPatientEntry,
+  Gender,
+  StayType,
+  HealthCheckRating,
+  HealthCheckEntry,
+  HospitalEntry,
+  OccupationalHealthcareEntry,
+  NewDiagnosisEntry,
+  Diagnoses,
+} from "../src/types";
 
 /*
 unknown is the ideal type for our kind of situation of input 
@@ -113,19 +123,140 @@ const parseGender = (gender: unknown): Gender => {
 // };
 
 // Function to validate the required fields for each entry type
-function validateEntryFields(entry: Entry): boolean {
-  switch (entry.type) {
-    case StayType.HealthCheck:
-      return "healthCheckRating" in entry;
-
-    case StayType.Hospital:
-      return "discharge" in entry;
-
-    case StayType.OccupationalHealthcare:
-      return "employerName" in entry;
-
-    default:
-      return false;
+const toNewDiagnosisEntry = (object: unknown): NewDiagnosisEntry => {
+  if (!object || typeof object !== "object") {
+    throw new Error("Incorrect or missing data");
   }
+
+  if (
+    "type" in object &&
+    "description" in object &&
+    "date" in object &&
+    "specialist" in object &&
+    "diagnosisCodes" in object
+  ) {
+    const entryType: StayType = parseStayType(object.type);
+
+    switch (entryType) {
+      case StayType.HealthCheck:
+        if ("healthCheckRating" in object) {
+          const newHealthCheckEntry: HealthCheckEntry = {
+            type: entryType,
+            description: parseTextData(object.description),
+            date: parseTextData(object.date),
+            specialist: parseTextData(object.specialist),
+            diagnosisCodes: parseDiagnosisCodes(object.diagnosisCodes),
+            healthCheckRating: parseHealthCheckRating(object.healthCheckRating),
+          };
+          return newHealthCheckEntry;
+        }
+        break;
+
+      case StayType.Hospital:
+        if (
+          "discharge" in object &&
+          object.discharge !== null &&
+          typeof object.discharge === "object" &&
+          "date" in object.discharge &&
+          "criteria" in object.discharge
+        ) {
+          const dischargeDate = parseTextData(object.discharge.date);
+          const dischargeCriteria = parseTextData(object.discharge.criteria);
+
+          if (dischargeDate && dischargeCriteria) {
+            const newHospitalEntry: HospitalEntry = {
+              type: entryType,
+              description: parseTextData(object.description),
+              date: parseTextData(object.date),
+              specialist: parseTextData(object.specialist),
+              diagnosisCodes: parseDiagnosisCodes(object.diagnosisCodes),
+              discharge: {
+                date: dischargeDate,
+                criteria: dischargeCriteria,
+              },
+            };
+            return newHospitalEntry;
+          }
+        }
+        break;
+
+      case StayType.OccupationalHealthcare:
+        if ("employerName" in object && "sickLeave" in object) {
+          const newOccupationalHealthcareEntry: OccupationalHealthcareEntry = {
+            type: entryType,
+            description: parseTextData(object.description),
+            date: parseTextData(object.date),
+            specialist: parseTextData(object.specialist),
+            diagnosisCodes: parseDiagnosisCodes(object.diagnosisCodes),
+            employerName: parseTextData(object.employerName),
+            sickLeave: parseSickLeave(object.sickLeave),
+          };
+          return newOccupationalHealthcareEntry;
+        }
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  throw new Error("Incorrect data: some fields are missing or invalid");
+};
+
+function parseDiagnosisCodes(
+  diagnosisCodes: unknown
+): Array<Diagnoses["code"]> | undefined {
+  if (
+    !diagnosisCodes ||
+    !Array.isArray(diagnosisCodes) ||
+    !diagnosisCodes.every((code) => typeof code === "string")
+  ) {
+    return undefined;
+  }
+
+  return diagnosisCodes as Array<Diagnoses["code"]>;
 }
-export default { toNewPatientEntry, validateEntryFields };
+
+function parseStayType(type: unknown): StayType {
+  if (
+    typeof type !== "string" ||
+    !Object.values(StayType).includes(type as StayType)
+  ) {
+    throw new Error("Invalid or missing diagnosis code type");
+  }
+
+  return type as StayType;
+}
+
+function parseHealthCheckRating(rating: unknown): HealthCheckRating {
+  if (
+    typeof rating !== "number" ||
+    !Object.values(HealthCheckRating).includes(rating as HealthCheckRating)
+  ) {
+    throw new Error("Invalid or missing health check rating");
+  }
+
+  return rating as HealthCheckRating;
+}
+
+function parseSickLeave(
+  sickLeave: unknown
+): OccupationalHealthcareEntry["sickLeave"] | undefined {
+  if (
+    sickLeave &&
+    typeof sickLeave === "object" &&
+    "startDate" in sickLeave &&
+    "endDate" in sickLeave
+  ) {
+    const startDate = parseTextData(sickLeave.startDate);
+    const endDate = parseTextData(sickLeave.endDate);
+
+    if (startDate && endDate) {
+      return { startDate, endDate };
+    }
+  }
+
+  return undefined;
+}
+
+export default { toNewPatientEntry, toNewDiagnosisEntry };

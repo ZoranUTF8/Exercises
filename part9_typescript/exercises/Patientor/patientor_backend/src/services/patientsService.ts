@@ -1,15 +1,10 @@
 import patients from "../demoData/patients";
-import requestToTyped from "../../utils/requestToTyped";
 
 import {
   Patient,
   NonSensitivePatientData,
   NewPatientEntry,
-  Entry,
-  StayType,
-  HealthCheckEntry,
-  HospitalEntry,
-  OccupationalHealthcareEntry,
+  NewDiagnosisEntry,
 } from "../types";
 import { v4 as uuidv4 } from "uuid";
 
@@ -55,61 +50,26 @@ const getSinglePatient = (patientId: string): Patient | undefined => {
 
 const addNewDiagnosisEntry = (
   patientId: string,
-  patientEntryData: Entry
-): Entry => {
-  const { type, ...entryData } = patientEntryData;
+  newEntry: NewDiagnosisEntry
+): void => {
+  const newUUID: string = uuidv4();
 
-  let newEntry: Entry | undefined;
+  const newPatientEntry = {
+    id: newUUID,
+    ...newEntry,
+  };
 
-  switch (type) {
-    case StayType.HealthCheck:
-      const healthCheckEntry: HealthCheckEntry = {
-        type: StayType.HealthCheck,
-        ...entryData,
-        healthCheckRating: patientEntryData.healthCheckRating,
-      };
-      newEntry = healthCheckEntry;
-      break;
-
-    case StayType.Hospital:
-      const hospitalEntry: HospitalEntry = {
-        type: StayType.Hospital,
-        ...entryData,
-        discharge: patientEntryData.discharge,
-      };
-      newEntry = hospitalEntry;
-      break;
-
-    case StayType.OccupationalHealthcare:
-      const occupationalHealthcareEntry: OccupationalHealthcareEntry = {
-        type: StayType.OccupationalHealthcare,
-        ...entryData,
-        employerName: patientEntryData.employerName,
-        sickLeave: patientEntryData.sickLeave,
-      };
-      newEntry = occupationalHealthcareEntry;
-      break;
+  const patientIndex = patients.findIndex(
+    (patient) => patient.id === patientId
+  );
+  if (patientIndex !== -1) {
+    patients[patientIndex].entries = patients[patientIndex].entries || [];
+    patients[patientIndex].entries.push(newPatientEntry);
+    console.log(`Entry added for patient with id ${patientId}`);
+    console.log(`New entry: `, newPatientEntry);
+  } else {
+    console.log(`Patient with id ${patientId} not found`);
   }
-
-  // Check if all required fields are provided for the entry type
-  if (!requestToTyped.validateEntryFields(newEntry)) {
-    throw new Error("Missing required fields for the entry type");
-  }
-
-  // Find the patient with the specified ID
-  const patientIndex = allPatients.findIndex((p) => p.id === patientId);
-  if (patientIndex === -1) {
-    throw new Error("Patient not found");
-  }
-
-  // Add the new entry to the patient's entries array
-  const patient = allPatients[patientIndex];
-  if (!patient.entries) {
-    patient.entries = []; // Initialize entries array if it's undefined
-  }
-  patient.entries.push(newEntry);
-
-  return newEntry;
 };
 
 export default {

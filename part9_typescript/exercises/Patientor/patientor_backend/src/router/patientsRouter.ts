@@ -35,9 +35,11 @@ patientsRouter.post("/", (req, res) => {
 
 patientsRouter.post("/:id/entries", (req, res) => {
   try {
+    const typedEntry = requestToTyped.toNewDiagnosisEntry(req.body);
+
     const newDiagnosisEntry = patientsService.addNewDiagnosisEntry(
       req.params.id,
-      req.body as Entry
+      typedEntry as Entry
     );
 
     res.json(newDiagnosisEntry);
